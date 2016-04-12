@@ -22,6 +22,8 @@
                 if($location.path() === '/'){
                     if(identificationFactory.userLogged()){
                         attachUserRelatedIssuesAndProjects();
+
+                        $scope.attachUserRelatedIssuesAndProjects = attachUserRelatedIssuesAndProjects;
                         $scope.addProjectRedirect = function () {
                             $location.path('projects/add');
                         };
@@ -61,9 +63,10 @@
                         };
                     }
                 }
-                function attachUserRelatedIssuesAndProjects(){
-                    issueFactory.getUserIssues()
+                function attachUserRelatedIssuesAndProjects(pageSize, pageNumber, orderBy){
+                    issueFactory.getUserIssues(pageSize, pageNumber, orderBy)
                         .then(function (issues) {
+                            $scope.issuePages = issues.data.TotalPages;
                             $scope.issues = issues.data.Issues;
                             var projects = [];
                             issues.data.Issues.forEach(function (issue) {
@@ -141,6 +144,14 @@
                     templateUrl: 'user/templates/user-authentication.html'
                 }
             }
-        ])
+        ]).filter('range', function(){
+            return function(n) {
+                var res = [];
+                for (var i = 1; i <= n; i++) {
+                    res.push(i);
+                }
+                return res;
+            };
+        });
 
 })();

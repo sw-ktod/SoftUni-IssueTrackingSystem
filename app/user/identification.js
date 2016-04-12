@@ -73,7 +73,7 @@
                 function getOwnId(){
                     var deferred = $q.defer();
                     if(!existingCookie()){
-                        deferred.reject()
+                        deferred.reject();
                     }
                     var id = JSON.parse(getCookieData('user')).Id;
                     deferred.resolve(id);
