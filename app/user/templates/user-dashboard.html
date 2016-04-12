@@ -8,13 +8,13 @@
     </div>
     <div class="col-md-8">
         <label for="pageSize">Issues per page</label>
-        <select ng-change="attachUserRelatedIssuesAndProjects(pageSize, page, pageOrder)" ng-model="pageSize" id="pageSize">
+        <select ng-change="attachUserRelatedIssues(pageSize, page, pageOrder)" ng-model="pageSize" id="pageSize">
             <option value="3">3</option>
             <option value="5">5</option>
             <option value="10">10</option>
         </select>
         <label for="pageOrder">Issue order</label>
-        <select ng-change="attachUserRelatedIssuesAndProjects(pageSize, page, pageOrder)" ng-model="pageOrder" id="pageOrder">
+        <select ng-change="attachUserRelatedIssues(pageSize, page, pageOrder)" ng-model="pageOrder" id="pageOrder">
             <option value="Id">Id &#x2191</option>
             <option value="Id desc">Id &#x2193</option>
             <option value="DueDate">Due Date &#x2191</option>
@@ -39,7 +39,7 @@
             </tbody>
         </table>
         <ul ng-if="issuePages>1" class="pagination">
-            <li ng-repeat="page in issuePages | range" ><a ng-click="attachUserRelatedIssuesAndProjects(pageSize, page, pageOrder)" href="#/">{{page}}</a></li>
+            <li ng-repeat="page in issuePages | range" ><a ng-click="attachUserRelatedIssues(pageSize, page, pageOrder)" href="#/">{{page}}</a></li>
         </ul>
         <button ng-if="userAdmin" class="btn btn-lg btn-success" ng-click="addIssueRedirect()">Add New Issue</button>
     </div>

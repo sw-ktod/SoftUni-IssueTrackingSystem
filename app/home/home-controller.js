@@ -23,7 +23,7 @@
                     if(identificationFactory.userLogged()){
                         attachUserRelatedIssuesAndProjects();
 
-                        $scope.attachUserRelatedIssuesAndProjects = attachUserRelatedIssuesAndProjects;
+                        $scope.attachUserRelatedIssues = attachUserRelatedIssues;
                         $scope.addProjectRedirect = function () {
                             $location.path('projects/add');
                         };
@@ -63,11 +63,16 @@
                         };
                     }
                 }
-                function attachUserRelatedIssuesAndProjects(pageSize, pageNumber, orderBy){
+                function attachUserRelatedIssues(pageSize, pageNumber, orderBy){
                     issueFactory.getUserIssues(pageSize, pageNumber, orderBy)
                         .then(function (issues) {
                             $scope.issuePages = issues.data.TotalPages;
                             $scope.issues = issues.data.Issues;
+                    });
+                };
+                function attachUserRelatedProjects(){
+                    issueFactory.getUserIssues(999999, 1)
+                        .then(function (issues) {
                             var projects = [];
                             issues.data.Issues.forEach(function (issue) {
                                 if(!projects.find(function (project) {
@@ -97,6 +102,10 @@
                                         })
                                 });
                         });
+                };
+                function attachUserRelatedIssuesAndProjects(){
+                    attachUserRelatedIssues();
+                    attachUserRelatedProjects();
                 }
             }
         ]).directive('navMenu', ['identificationFactory',
