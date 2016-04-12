@@ -71,11 +71,13 @@
                 }
 
                 function getOwnId(){
+                    var deferred = $q.defer();
                     if(!existingCookie()){
-                        return false;
+                        deferred.reject()
                     }
                     var id = JSON.parse(getCookieData('user')).Id;
-                    return $q.when(id);
+                    deferred.resolve(id);
+                    return deferred.promise;
                 }
 
                 return {
