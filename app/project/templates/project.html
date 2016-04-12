@@ -1,14 +1,14 @@
 <div nav-menu></div>
 
-<div class="jumbotron" style="height: 100%;">
-    <h3>Project page</h3>
+<div>
+    <h1>Project page</h1>
     <br />
     <div class="item col-md-4">
-        <h4 >
+        <h2 >
             {{project.ProjectKey}}
-            <a ng-if="isAdmin || isLead" class="btn btn-sm btn-success" href="#/projects/{{project.Id}}/edit">Edit</a>
-            <a ng-if="isAdmin || isLead" class="btn btn-sm btn-success" href="#/issues/add">Add Issue</a>
-        </h4>
+            <a ng-if="isAdmin || isLead" class="btn btn-md btn-success" href="#/projects/{{project.Id}}/edit">Edit</a>
+            <a ng-if="isAdmin || isLead" class="btn btn-md btn-success" href="#/issues/add">Add Issue</a>
+        </h2>
 
 
         <p>Project key: {{project.ProjectKey}}</p>

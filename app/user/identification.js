@@ -30,7 +30,7 @@
                     getSelf()
                         .then(function (response) {
                             $window.sessionStorage.user = JSON.stringify(response);
-                    });
+                        });
                 }
                 function existingCookie(){
                     return $window.sessionStorage.access_token ? 1 : 0;
@@ -123,9 +123,7 @@
                     getOwnId: getOwnId,
                     requireAdmin: requireAdmin,
                     getUser: getSelf,
-                    isAdmin: isAdmin,
-                    //isLead: isLead,
-                    //isAssignee: isAssignee,
+                    isAdmin: isAdmin
                 }
             }])
 })();

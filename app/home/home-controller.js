@@ -19,41 +19,42 @@
             'issueFactory',
             'projectFactory',
             function homeCtrl($scope, $route, $location, authService, popService, identificationFactory, issueFactory, projectFactory) {
-
-                if($location.path() === '/' && identificationFactory.userLogged()){
-                    attachUserRelatedIssuesAndProjects();
-                    $scope.addProjectRedirect = function () {
-                        $location.path('projects/add');
-                    };
-                    $scope.addIssueRedirect = function () {
-                        $location.path('issues/add');
-                    };
-                }else{
-                    $scope.login = function (user) {
-                        authService.login(user)
-                            .then(function (loggedUser) {
-                                identificationFactory.setCookie(loggedUser);
-                                $route.reload();
-                                popService.pop(200, 'Successfully logged in');
-                            }, function (error) {
-                                var message = popService.getErrorMessage(error);
-                                popService.pop(error.status, message);
-                            });
-                    };
-                    $scope.register = function (user) {
-                        authService.register(user)
-                            .then(function (registeredUser) {
-                                identificationFactory.setCookie(registeredUser);
-                                authService.login(user)
-                                    .then(function () {
-                                        $route.reload();
-                                        popService.pop(200, 'Successfully registered');
-                                    })
-                            }, function (error) {
-                                var message = popService.getErrorMessage(error);
-                                popService.pop(error.status, message);
-                            });
-                    };
+                if($location.path() === '/'){
+                    if(identificationFactory.userLogged()){
+                        attachUserRelatedIssuesAndProjects();
+                        $scope.addProjectRedirect = function () {
+                            $location.path('projects/add');
+                        };
+                        $scope.addIssueRedirect = function () {
+                            $location.path('issues/add');
+                        };
+                    }else{
+                        $scope.login = function (user) {
+                            authService.login(user)
+                                .then(function (loggedUser) {
+                                    identificationFactory.setCookie(loggedUser);
+                                    $route.reload();
+                                    popService.pop(200, 'Successfully logged in');
+                                }, function (error) {
+                                    var message = popService.getErrorMessage(error);
+                                    popService.pop(error.status, message);
+                                });
+                        };
+                        $scope.register = function (user) {
+                            authService.register(user)
+                                .then(function (registeredUser) {
+                                    identificationFactory.setCookie(registeredUser);
+                                    authService.login(user)
+                                        .then(function () {
+                                            $route.reload();
+                                            popService.pop(200, 'Successfully registered');
+                                        })
+                                }, function (error) {
+                                    var message = popService.getErrorMessage(error);
+                                    popService.pop(error.status, message);
+                                });
+                        };
+                    }
                 }
                 function attachUserRelatedIssuesAndProjects(){
                     issueFactory.getUserIssues()
@@ -88,6 +89,51 @@
                                         })
                                 });
                         });
+                }
+            }
+        ]).directive('navMenu', ['identificationFactory',
+            'authService',
+            '$route',
+            'popService',
+            function navMenu(identificationFactory, authService, $route, popService) {
+                return {
+                    controller: ['$scope', function ($scope) {
+                        $scope.logout = function () {
+                            authService.logout()
+                                .then(function (success) {
+                                    identificationFactory.removeCookie();
+                                    $route.reload();
+                                    popService.pop(200, 'Successfully logged out');
+                                }, function (error) {
+                                    var message = popService.getErrorMessage(error);
+
+                                    if(error.status == 401){
+                                        identificationFactory.removeCookie();
+                                        $route.reload();
+                                    }
+                                    popService.pop(error.status, message);
+                                })
+                        };
+                    }],
+                    compile: function () {
+                        return {
+                            pre: function(scope){
+                                scope.userLogged = identificationFactory.userLogged();
+                                scope.isAdmin = identificationFactory.isAdmin();
+                            }
+                        }
+                    },
+                    templateUrl: 'user/templates/user-nav.html'
+                };
+        }]).directive('userDashboard',['identificationFactory',
+            function userDashboard(identificationFactory) {
+                return {
+                    templateUrl: 'user/templates/user-dashboard.html'
+                };
+        }]).directive('userAuthentication',[
+            function userAuthentication() {
+                return {
+                    templateUrl: 'user/templates/user-authentication.html'
                 }
             }
         ])

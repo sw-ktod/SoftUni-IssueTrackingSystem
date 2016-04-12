@@ -1,13 +1,13 @@
 <div nav-menu></div>
 
 <div>
-    <h3>Issue page</h3>
+    <h1>Issue page</h1>
     <br />
     <div class="item col-md-6 panel">
-        <h3>
-            {{project.ProjectKey}}
-            <a ng-if="isAdmin || isLead || isAssignee" class="btn btn-sm btn-success" href="#/issues/{{issue.Id}}/edit">Edit</a>
-        </h3>
+        <h2>
+            {{issue.IssueKey}}
+            <a ng-if="isAdmin || isLead || isAssignee" class="btn btn-md btn-success" href="#/issues/{{issue.Id}}/edit">Edit</a>
+        </h2>
         <p><b>Title </b> {{issue.Title}}</p>
         <p><b>Description </b> {{issue.Description}}</p>
         <p><b>Assignee Id </b> (current id: {{issue.Assignee.Id}}) {{issue.Assignee.Username}}</p>
