@@ -82,6 +82,7 @@
             }
             function manageLabels(issue){
                 var labels = [];
+                console.log(issue);
                 issue.Labels.split(', ').forEach(function (label, key) {
                     labels.push({
                         Id: key,

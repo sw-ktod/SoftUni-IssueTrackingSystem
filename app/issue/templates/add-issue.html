@@ -32,6 +32,11 @@
             <label for="issueDescription">Description</label>
             <textarea id="issueDescription" class="form-control" placeholder="Description" ng-model="issue.Description"></textarea>
         </div>
+        <div class="form-group">
+            <label for="issueLabels">Labels (comma separated)</label>
+            <input type="text" class="form-control" ng-model="issue.Labels" id="issueLabels" placeholder="Soft, Uni">
+            <br>
+        </div>
         <button type="submit" class="btn btn-success" ng-click="addIssue(issue)">Add Issue</button>
     </form>
 </div>
