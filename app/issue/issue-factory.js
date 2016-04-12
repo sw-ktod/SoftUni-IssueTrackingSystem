@@ -34,7 +34,7 @@
                         deferred.resolve(response);
                     },
                     function (error) {
-                        deferred.reject(response);
+                        deferred.reject(error);
                     });
                 return deferred.promise;
             }
@@ -95,6 +95,7 @@
             return {
                 getIssue: getIssue,
                 addIssue: addIssue,
+                editIssue: editIssue,
                 getUserIssues: userIssues,
                 getIssuesByProject: getIssuesByProject,
                 translateLabels: translateLabels

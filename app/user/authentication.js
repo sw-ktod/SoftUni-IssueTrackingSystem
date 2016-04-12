@@ -7,7 +7,6 @@
             'BASE_URL',
             'identificationFactory',
             function ($http,$q, BASE_URL, identificationFactory) {
-
                 function loginUser(user){
                     var deferred = $q.defer();
                     user['grant_type']='password';

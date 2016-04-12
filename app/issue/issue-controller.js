@@ -78,7 +78,7 @@ angular.module('IssueTrackingSystem.Issue', [])
                     delete issue.Priorities;
                     issue.IssueKey = issue.Title.match(/\b(\w)/g).join('');
 
-                    issueFactory.edit(issue)
+                    issueFactory.editIssue(issue)
                         .then(function (success) {
                             $location.path('#/issues/'+issue.Id);
                             popService.pop(success.status, 'Issue edited successfully');

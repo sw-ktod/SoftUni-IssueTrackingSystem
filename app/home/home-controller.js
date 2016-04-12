@@ -32,9 +32,14 @@
                         $scope.login = function (user) {
                             authService.login(user)
                                 .then(function (loggedUser) {
-                                    identificationFactory.setCookie(loggedUser);
-                                    $route.reload();
-                                    popService.pop(200, 'Successfully logged in');
+                                    identificationFactory.setCookie('access_token', loggedUser.access_token);
+                                    identificationFactory.getUser()
+                                        .then(function (self) {
+                                            var userString = JSON.stringify(self.data);
+                                            identificationFactory.setCookie('user', userString);
+                                            $route.reload();
+                                            popService.pop(200, 'Successfully logged in');
+                                        });
                                 }, function (error) {
                                     var message = popService.getErrorMessage(error);
                                     popService.pop(error.status, message);

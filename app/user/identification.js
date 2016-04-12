@@ -25,12 +25,11 @@
             '$q',
             'BASE_URL',
             function ($window, $location, popService, $http, $q, BASE_URL) {
-                function setCookie(user){
-                    $window.sessionStorage.access_token = user.access_token;
-                    getSelf()
-                        .then(function (response) {
-                            $window.sessionStorage.user = JSON.stringify(response);
-                        });
+                function setCookie(key, value){
+                    $window.sessionStorage[key] = value;
+                }
+                function getCookieData(key){
+                    return $window.sessionStorage[key];
                 }
                 function existingCookie(){
                     return $window.sessionStorage.access_token ? 1 : 0;
@@ -45,12 +44,13 @@
                         popService.pop(401, "You have to login first");
                         return;
                     }
-                    //getSelf()
-                    //    .then(function (self) {
-                    //        return true;
-                    //    }, function (error) {
-                    //
-                    //    });
+                }
+                function isAdmin(){
+                    if(!existingCookie()){
+                        return false;
+                    }
+                    var user = getCookieData('user');
+                    return JSON.parse(user).isAdmin;
                 }
                 function requireAdmin(){
                     if(!isAdmin()){
@@ -58,62 +58,25 @@
                         popService.pop(401, "Admin privileges required to access this page");
                         return;
                     }
-                    //getSelf()
-                    //    .then(function (self) {
-                    //        return self.isAdmin;
-                    //    }, function (error) {
-                    //        $location.path('/');
-                    //        popService.pop(401, "You have to login first");
-                    //    });
                 }
                 function getSelf(){
                     var deferred = $q.defer();
                     $http.get(BASE_URL + 'users/me')
                         .then(function (response) {
-                            deferred.resolve(response.data);
+                            deferred.resolve(response);
                         }, function (error) {
                             deferred.reject(error);
                         });
                     return deferred.promise;
                 }
-                function isAdmin(){
-                    if($window.sessionStorage.user){
-                        return JSON.parse($window.sessionStorage.user).isAdmin;
-                    }
-                    return false
-                }
-                //
-                //function isLead(project){
-                //    getOwnId()
-                //        .then(function (id) {
-                //            return (project.data.Lead.Id === id);
-                //        });
-                //}
-                //
-                //function isAssignee(issue){
-                //    getOwnId()
-                //        .then(function (id) {
-                //            return (issue.data.Assignee.Id == id);
-                //        })
-                //}
 
-
-                //TODO fix getOwnId
                 function getOwnId(){
-                    var deferred = $q.defer();
-                    getSelf()
-                        .then(function (self) {
-                            deferred.resolve(self.Id);
-                        }, function (error) {
-                            deferred.reject(error);
-                        });
-                    return deferred.promise;
+                    if(!existingCookie()){
+                        return false;
+                    }
+                    var id = JSON.parse(getCookieData('user')).Id;
+                    return $q.when(id);
                 }
-
-                function getCookieData(key){
-                    return $window.sessionStorage[key];
-                }
-
 
                 return {
                     setCookie: setCookie,
