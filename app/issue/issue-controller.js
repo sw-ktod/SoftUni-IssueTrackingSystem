@@ -62,7 +62,7 @@ angular.module('IssueTrackingSystem.Issue', [])
                                     });
 
                             });
-                        $scope.issue = issue.data;
+                        $scope.issue = issueFactory.translateLabels(issue.data);
                     }
                 });
                 userFactory.getUsers()
@@ -102,8 +102,8 @@ angular.module('IssueTrackingSystem.Issue', [])
                                         $scope.isAssignee = (issue.data.Assignee.Id === id);
                                     });
                             });
-                        $scope.issue = issue.data;
-                });
+                        $scope.issue = issueFactory.translateLabels(issue.data);
+                    });
             }
             /**
              * Adding Issues

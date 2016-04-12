@@ -16,6 +16,7 @@
                 return deferred.promise;
             }
             function addIssue(issue){
+                issue = manageLabels(issue);
                 var deferred = $q.defer();
                 $http.post(BASE_URL + 'issues', issue)
                     .then(function (response) {
@@ -26,6 +27,7 @@
                 return deferred.promise;
             }
             function editIssue(issue){
+                issue = manageLabels(issue);
                 var deferred = $q.defer();
                 $http.put(BASE_URL + 'issues/' + issue.Id)
                     .then(function (response) {
@@ -65,12 +67,37 @@
                     });
                 return deferred.promise;
             }
+            function translateLabels(issue){
+                var labels = '';
+                issue.Labels.forEach(function (label) {
+                    if(labels !== ''){
+                        labels += ', ' + label.Name;
+                    }else{
+                        labels = label.Name;
+                    }
+                });
+                issue.Labels = labels;
+
+                return issue;
+            }
+            function manageLabels(issue){
+                var labels = [];
+                issue.Labels.split(', ').forEach(function (label, key) {
+                    labels.push({
+                        Id: key,
+                        Name: label
+                    })
+                });
+                issue.Labels = labels;
+                return issue;
+            }
 
             return {
                 getIssue: getIssue,
                 addIssue: addIssue,
                 getUserIssues: userIssues,
-                getIssuesByProject: getIssuesByProject
+                getIssuesByProject: getIssuesByProject,
+                translateLabels: translateLabels
             };
         }])
 })();

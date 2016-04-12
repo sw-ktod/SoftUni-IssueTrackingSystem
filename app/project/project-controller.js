@@ -100,7 +100,7 @@
                                 .then(function (id) {
                                     $scope.isLead = (project.data.Lead.Id === id);
                                 });
-                            $scope.project = project.data;
+                            $scope.project = projectFactory.translatePrioritiesAndLabels(project.data);
                             issueFactory.getIssuesByProject($routeParams.id)
                                 .then(function (projectIssues) {
                                     $scope.project.issues = projectIssues;
