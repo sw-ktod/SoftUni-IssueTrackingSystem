@@ -1,0 +1,25 @@
+<div nav-menu/>
+<div class="item col-md-7 panel">
+    <form name="editProfileForm" class="item col-md-6 panel">
+        <h2>Edit profile</h2>
+        <label class="form-control-label" for="edit-name">Name</label>
+        <br />
+        <input class="form-control" type="text" id="edit-name" ng-model="user.name">
+        <br />
+        <label class="form-control-label" for="edit-email">E-mail</label>
+        <br />
+        <input class="form-control" type="email" id="edit-email" ng-model="user.Email">
+        <br />
+        <label class="form-control-label">Gender</label>
+        <br />
+        <input type="radio" value="1" name="edit-gender" ng-model="user.gender"/> Male
+        <input type="radio" value="2" name="edit-gender" ng-model="user.gender"/> Female
+        <input type="radio" value="0" name="edit-gender" ng-model="user.gender"/> Other
+        <br />
+        <br />
+        <button ng-disabled="editProfileForm.$invalid
+            || !user.email
+            || !user.name"
+                class="btn btn-primary form-control" ng-click="editUser(user)">Edit profile</button>
+    </form>
+</div>

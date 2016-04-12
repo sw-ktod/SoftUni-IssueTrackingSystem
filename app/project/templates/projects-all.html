@@ -1,0 +1,13 @@
+<div nav-menu></div>
+
+<div>
+    <h1>Projects</h1>
+    <br />
+
+    <div class="item col-md-4 panel" ng-repeat="project in projects">
+        <p>
+            {{project.Name}}
+            <a class="btn btn-sm btn-success" href="#/projects/{{project.Id}}">view</a>
+        </p>
+    </div>
+</div>

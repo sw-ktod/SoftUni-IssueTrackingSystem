@@ -1,0 +1,37 @@
+<div nav-menu></div>
+<div>
+    <h2 style="margin-top: 0"> Edit Issue</h2>
+    <form>
+        <div class="form-group">
+            <label for="issueTitle">Title</label>
+            <input type="text" class="form-control" id="issueTitle" ng-model="issue.Title" placeholder="Issue Title">
+        </div>
+        <div class="form-group">
+            <label for="issueAssignee">Assignee</label>
+            <select ng-disabled="!isAdmin || isLead" id="issueAssignee" ng-model="issue.Assignee.Id" class="form-control">
+                <option ng-repeat="user in users" value="{{user.Id}}" >{{user.Username}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="issueProject">Project</label>
+            <select id="issueProject" ng-change="attachProjectPriorities(issue.Project.Id)" ng-model="issue.Project.Id" class="form-control">
+                <option ng-repeat="project in projects" value="{{project.Id}}" >{{project.Name}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="issuePriority">Priority</label>
+            <select ng-model="issue.PriorityId" id="issuePriority" class="form-control">
+                <option ng-repeat="priority in issue.Priorities" value="{{priority.Id}}">{{priority.Name}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="issueDueDate">Due Date</label>
+            <input type="text" class="form-control" id="issueDueDate" ng-model="issue.DueDate" placeholder="mm/dd/yyyy">
+        </div>
+        <div class="form-group">
+            <label for="issueDescription">Description</label>
+            <textarea id="issueDescription" class="form-control" placeholder="Description" ng-model="issue.Description"></textarea>
+        </div>
+        <button type="submit" class="btn btn-success" ng-click="editIssue(issue)">Add Issue</button>
+    </form>
+</div>

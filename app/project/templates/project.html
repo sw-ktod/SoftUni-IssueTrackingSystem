@@ -1,0 +1,49 @@
+<div nav-menu></div>
+
+<div class="jumbotron" style="height: 100%;">
+    <h3>Project page</h3>
+    <br />
+    <div class="item col-md-4">
+        <h4 >
+            {{project.ProjectKey}}
+            <a ng-if="isAdmin || isLead" class="btn btn-sm btn-success" href="#/projects/{{project.Id}}/edit">Edit</a>
+            <a ng-if="isAdmin || isLead" class="btn btn-sm btn-success" href="#/issues/add">Add Issue</a>
+        </h4>
+
+
+        <p>Project key: {{project.ProjectKey}}</p>
+        <p><b>Name</b> {{project.Name}}</p>
+        <p><b>Description</b> {{project.Description}}</p>
+        <p><b>LeadId</b> (current id: {{project.Lead.Id}}) {{project.Lead.Username}}</p>
+    </div>
+    <div class="item col-md-5">
+
+        <table class="table table-hover ">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description
+                <th>Due Date
+                <th>Assignee</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr style="border-top: solid 1px grey" ng-repeat="issue in project.issues">
+                <td>
+                    <a style="text-decoration:none" href="#/issues/{{issue.Id}}">{{issue.Title}} </a>
+                </td>
+                <td>{{issue.Description}} </td>
+                <td>{{issue.DueDate}} </td>
+                <td>{{issue.Assignee.Username}} </td>
+            </tr>
+            </tbody>
+        </table>
+
+
+    </div>
+
+</div>
+
+
+
+

@@ -1,0 +1,31 @@
+<div>
+    <h1>Dashboard</h1>
+    <div class="col-md-4">
+        <h2>Affiliated projects</h2>
+        <a href="#/projects/{{project.Id}}" class="row" ng-repeat="project in projects">{{project.Name}}</a>
+        <br />
+        <button ng-if="userAdmin" class="btn btn-lg btn-success" ng-click="addProjectRedirect()">Add New Project</button>
+    </div>
+    <div class="col-md-8">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Issue</th>
+                <th>Description</th>
+                <th>Project</th>
+                <th>Due Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class ng-repeat="issue in issues">
+                <td><a href="#/issues/{{issue.Id}}">{{issue.Title}}</a></td>
+                <td>{{issue.Description}}</td>
+                <td><a href="#/projects/{{issue.Project.Id}}">{{issue.Project.Name}}</a></td>
+                <td>{{issue.DueDate}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <button ng-if="userAdmin" class="btn btn-lg btn-success" ng-click="addIssueRedirect()">Add New Issue</button>
+    </div>
+
+</div>

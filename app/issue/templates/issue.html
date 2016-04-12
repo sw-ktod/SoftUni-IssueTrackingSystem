@@ -1,0 +1,26 @@
+<div nav-menu></div>
+
+<div>
+    <h3>Issue page</h3>
+    <br />
+    <div class="item col-md-6 panel">
+        <h3>
+            {{project.ProjectKey}}
+            <a ng-if="isAdmin || isLead || isAssignee" class="btn btn-sm btn-success" href="#/issues/{{issue.Id}}/edit">Edit</a>
+        </h3>
+        <p><b>Title </b> {{issue.Title}}</p>
+        <p><b>Description </b> {{issue.Description}}</p>
+        <p><b>Assignee Id </b> (current id: {{issue.Assignee.Id}}) {{issue.Assignee.Username}}</p>
+        <p><b>Priority Id </b> (current id: {{issue.Priority.Id}}) {{issue.Priority.Name}}</p>
+        <p>Author: {{issue.Author.Username}}</p>
+        <p>Project: {{issue.Project.Name}}</p>
+        <p>Status: {{issue.Status.Name}}</p>
+        <p>Labels: {{issue.Labels}}</p>
+    </div>
+    <div class="item col-md-6 panel">
+    </div>
+</div>
+
+
+
+

@@ -1,0 +1,34 @@
+<div nav-menu></div>
+<div class=jumbotron>
+    <h2 style="margin-top: 0"> Add new Project</h2>
+    <form name="add-project-form">
+        <div class="form-group">
+            <label for="projectName">Name</label>
+            <input type="text" class="form-control" id="projectName" placeholder="Project Name" ng-model="project.Name">
+        </div>
+        <div class="form-group">
+            <label for="projectLeader">Leader</label>
+            <select ng-model="project.LeadId" id="projectLeader" class="form-control">
+                <option  value="{{user.Id}}" ng-repeat="user in users">{{user.Username}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="projectPriorities">Priorities (comma separated)</label>
+            <input ng-model="project.Priorities" type="text" class="form-control" id="projectPriorities" placeholder="Available Priorities For The Issues" value="Low, Medium, Urgent">
+        </div>
+        <div class="form-group">
+            <label for="projectLabels">Labels (comma separated)</label>
+            <input ng-model="project.Labels" type="text" class="form-control" id="projectLabels" placeholder="Labels" value="Soft">
+            <br>
+        </div>
+        <div class="form-group">
+            <label for="projectDescription">Description</label>
+            <textarea id="projectDescription" ng-model="project.Description" class="form-control" placeholder="Description"></textarea>
+        </div>
+        <button type="submit" class="btn btn-success" ng-disabled="!project.Name
+                        ||!project.Description
+                        ||!project.LeadId
+                        ||add-project-form.$invalid"
+                ng-click="addProject(project)">Add Project</button>
+    </form>
+</div>

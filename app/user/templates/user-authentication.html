@@ -1,0 +1,49 @@
+<div class="row">
+    <form name="loginForm" class="item col-md-6 panel">
+        <h2>Login</h2>
+        <label class="form-control-label" for="username">Username</label>
+        <br />
+        <input class="form-control" type="text" id="username" ng-model="logUser.username">
+        <br />
+        <label class="form-control-label" for="password">Password</label>
+        <br />
+        <input class="form-control" type="password" id="password" ng-model="logUser.password">
+        <br />
+        <br />
+        <button ng-disabled="loginForm.$invalid || !logUser.username || !logUser.password" class="btn btn-primary form-control" ng-click="login(logUser)">Login</button>
+    </form>
+    <form name="registerForm" class="item col-md-6 panel">
+        <h2>Register</h2>
+        <label class="form-control-label" for="reg-email">E-mail</label>
+        <br />
+        <input class="form-control" type="email" id="reg-email" ng-model="user.Email">
+        <br />
+        <label class="form-control-label" for="reg-password">Password</label>
+        <br />
+        <input class="form-control" type="password" id="reg-password" ng-model="user.Password">
+        <br />
+        <label class="form-control-label" for="reg-confirmPassword">Confirm password</label>
+        <br />
+        <input class="form-control" type="password" id="reg-confirmPassword" ng-model="user.ConfirmPassword">
+        <br />
+        <label class="form-control-label" for="reg-name">Name</label>
+        <br />
+        <input class="form-control" type="text" id="reg-name" ng-model="user.Name">
+        <br />
+        <label class="form-control-label">Gender</label>
+        <br />
+        <input type="radio" value="1" name="reg-gender" ng-model="user.Gender"/> Male
+        <input type="radio" value="2" name="reg-gender" ng-model="user.Gender"/> Female
+        <input type="radio" value="0" name="reg-gender" ng-model="user.Gender"/> Other
+        <br />
+        <br />
+        <button ng-disabled="registerForm.$invalid
+            || !user.Password
+            || !user.ConfirmPassword
+            || !user.Email
+            || user.Password.length < 6
+            || user.Password.length > 100
+            || user.ConfirmPassword != user.Password"
+                class="btn btn-primary form-control" ng-click="register(user)">Register</button>
+    </form>
+</div>

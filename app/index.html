@@ -1,0 +1,34 @@
+<html ng-app="IssueTrackingSystem" lang="en"><head>
+    <meta charset="utf-8">
+    <title>SoftUni Issue Tracker</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <link media="screen" href="./bootstrap.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <script type="text/javascript" async="" src="https://ssl.google-analytics.com/ga.js"></script>
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-route.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ng-dialog/0.5.9/js/ngDialog.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-cookies.min.js"></script>
+</head>
+
+<body>
+
+<div class="container">
+    <div ng-view class="margin-top-70"/>
+</div>
+
+</body>
+<script src="app.js"></script>
+<script src="home/home-controller.js"></script>
+<script src="user/user-controller.js"></script>
+<script src="user/user-factory.js"></script>
+<script src="project/project-controller.js"></script>
+<script src="project/project-factory.js"></script>
+<script src="issue/issue-controller.js"></script>
+<script src="issue/issue-factory.js"></script>
+<script src="popper/popper.js"></script>
+<script src="user/authentication.js"></script>
+<script src="user/identification.js"></script>
+</html>
