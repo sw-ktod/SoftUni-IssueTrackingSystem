@@ -105,7 +105,7 @@
                                         .then(function (projectIssues) {
 
                                             //user associated issues
-                                            
+
                                             $scope.project.issues = projectIssues.filter(function (issue) {
                                                 return issue.Assignee.Id === id;
                                             });

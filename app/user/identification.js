@@ -75,8 +75,12 @@
                     if(!existingCookie()){
                         deferred.reject();
                     }
-                    var id = JSON.parse(getCookieData('user')).Id;
-                    deferred.resolve(id);
+                    if(getCookieData('user')){
+                        var id = JSON.parse(getCookieData('user')).Id;
+                        deferred.resolve(id);
+                    }else{
+                        deferred.reject();
+                    }
                     return deferred.promise;
                 }
 
