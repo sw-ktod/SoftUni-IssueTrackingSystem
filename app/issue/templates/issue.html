@@ -17,8 +17,23 @@
         <p>Status: {{issue.Status.Name}}</p>
         <p>Labels: {{issue.Labels}}</p>
     </div>
-    <div class="item col-md-6 panel">
+    <div class="item col-md-12 panel">
+        <div ng-if="issue.Comments" ng-repeat="comment in issue.Comments">
+            <h4>{{comment.Author.Username}} - {{comment.CreatedOn}}</h4>
+            <p>{{comment.Text}}</p>
+            <br />
+        </div>
     </div>
+
+    <div ng-if="isAssignee || isLead" class="item col-md-12 panel">
+        <div class="form-group">
+            <label for="issueCommentInput"><b>Text: </b></label>
+            <textarea id="issueCommentInput" class="form-control" placeholder="Leave your comment here..." ng-model="comment.Text"></textarea>
+        </div>
+        <button type="submit" class="btn btn-success" ng-click="addComment(comment)">Add Comment</button>
+    </div>
+
+
 </div>
 
 

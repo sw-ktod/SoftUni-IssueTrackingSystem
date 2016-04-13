@@ -9,12 +9,21 @@
                 var deferred = $q.defer();
                 $http.get(BASE_URL + 'issues/' + id)
                     .then(function (response) {
-                        deferred.resolve(response);
+
+                        // Possible errors
+                        var issue = response.data;
+                        getIssueComments(id)
+                            .then(function (comments) {
+                                issue.Comments = comments.data;
+                                deferred.resolve(response);
+                            }, function (error) {
+                                deferred.reject(error);
+                            });
                     }, function (error) {
                         deferred.reject(error);
                     });
                 return deferred.promise;
-            }
+            };
             function addIssue(issue){
                 issue = manageLabels(issue);
                 var deferred = $q.defer();
@@ -25,7 +34,7 @@
                         deferred.reject(error);
                     });
                 return deferred.promise;
-            }
+            };
             function editIssue(issue){
                 issue = manageLabels(issue);
                 var deferred = $q.defer();
@@ -37,9 +46,7 @@
                         deferred.reject(error);
                     });
                 return deferred.promise;
-            }
-
-
+            };
             function userIssues(pageSize, pageNumber ,orderBy){
                 pageSize = pageSize || 3;
                 pageNumber = pageNumber || 1;
@@ -55,7 +62,29 @@
                         deferred.reject(error);
                     });
                 return deferred.promise;
-            }
+            };
+            function getIssueComments(id){
+                var deferred = $q.defer();
+                $http.get(BASE_URL + 'issues/' + id + '/comments')
+                    .then(function (response) {
+                        deferred.resolve(response);
+                    }, function (error) {
+                        deferred.reject(error);
+                    });
+                return deferred.promise;
+            };
+
+            function addComment(id, comment){
+                var deferred = $q.defer();
+
+                $http.post(BASE_URL + 'issues/' + id + '/comments', comment)
+                    .then(function (response) {
+                        deferred.resolve(response);
+                    }, function (error) {
+                        deferred.reject(error);
+                    });
+                return deferred.promise;
+            };
 
             function getIssuesByProject(id){
                 var deferred = $q.defer();
@@ -66,7 +95,7 @@
                         deferred.reject(error);
                     });
                 return deferred.promise;
-            }
+            };
             function translateLabels(issue){
                 var labels = '';
                 issue.Labels.forEach(function (label) {
@@ -79,10 +108,9 @@
                 issue.Labels = labels;
 
                 return issue;
-            }
+            };
             function manageLabels(issue){
                 var labels = [];
-                console.log(issue);
                 issue.Labels.split(', ').forEach(function (label, key) {
                     labels.push({
                         Id: key,
@@ -91,7 +119,7 @@
                 });
                 issue.Labels = labels;
                 return issue;
-            }
+            };
 
             return {
                 getIssue: getIssue,
@@ -99,6 +127,7 @@
                 editIssue: editIssue,
                 getUserIssues: userIssues,
                 getIssuesByProject: getIssuesByProject,
+                addComment: addComment,
                 translateLabels: translateLabels
             };
         }])

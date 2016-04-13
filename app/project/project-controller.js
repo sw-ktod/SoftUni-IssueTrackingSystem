@@ -103,9 +103,15 @@
                                     $scope.project = projectFactory.translatePrioritiesAndLabels(project.data);
                                     issueFactory.getIssuesByProject($routeParams.id)
                                         .then(function (projectIssues) {
+
+                                            //user associated issues
+                                            
                                             $scope.project.issues = projectIssues.filter(function (issue) {
                                                 return issue.Assignee.Id === id;
                                             });
+                                            if($scope.isLead || $scope.isAdmin){
+                                                $scope.project.issues = projectIssues;
+                                            }
                                     });
 
                             });

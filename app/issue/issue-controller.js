@@ -104,6 +104,16 @@ angular.module('IssueTrackingSystem.Issue', [])
                             });
                         $scope.issue = issueFactory.translateLabels(issue.data);
                     });
+                $scope.addComment = function (comment) {
+                    issueFactory.addComment($routeParams.id, comment)
+                        .then(function (response) {
+                            popService.pop(response.status, 'Comment added successfuly');
+                            $scope.issue.Comments = response.data;
+                        }, function (error) {
+                            var message = popService.getErrorMessage(error);
+                            popService.pop(error.status, message);
+                        })
+                }
             }
             /**
              * Adding Issues
@@ -137,22 +147,6 @@ angular.module('IssueTrackingSystem.Issue', [])
                 })[0];
                 $scope.issue.Priorities = project.Priorities;
             };
-            //$scope.attachProjectPrioritiesAndLabels = function (id) {
-            //    $scope.issue.Labels = '';
-            //    var project = $scope.projects.filter(function (project) {
-            //        return project.Id == id;
-            //    })[0];
-            //    $scope.issue.Priorities = project.Priorities;
-            //    project.Labels.forEach(function (label) {
-            //        if($scope.issue.Labels){
-            //            $scope.issue.Labels +=', ' + label.Name;
-            //        }else{
-            //            $scope.issue.Labels = label.Name;
-            //        }
-            //    });
-            //};
-
-
 
     }])
 

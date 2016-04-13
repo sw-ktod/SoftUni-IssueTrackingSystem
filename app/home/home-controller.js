@@ -145,12 +145,12 @@
         }]).directive('userDashboard',['identificationFactory',
             function userDashboard(identificationFactory) {
                 return {
-                    templateUrl: 'user/templates/user-dashboard.html'
+                    templateUrl: 'home/templates/dashboard.html'
                 };
         }]).directive('userAuthentication',[
             function userAuthentication() {
                 return {
-                    templateUrl: 'user/templates/user-authentication.html'
+                    templateUrl: 'home/templates/authentication.html'
                 }
             }
         ]).filter('range', function(){
