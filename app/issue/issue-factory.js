@@ -111,10 +111,12 @@
             function manageLabels(issue){
                 var labels = [];
                 issue.Labels.split(', ').forEach(function (label, key) {
-                    labels.push({
-                        Id: key,
-                        Name: label
-                    })
+                    if(label !== ''){
+                        labels.push({
+                            Id: key,
+                            Name: label
+                        })
+                    }
                 });
                 issue.Labels = labels;
                 return issue;

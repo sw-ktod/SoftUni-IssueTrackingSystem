@@ -39,6 +39,7 @@ angular.module('IssueTrackingSystem.Issue', [])
         'identificationFactory',
         'popService',
         function issueCtrl($scope, $location, $route, $routeParams, userFactory, projectFactory, issueFactory, identificationFactory, popService) {
+
             /**
              * Editing Issues
              */
@@ -96,6 +97,7 @@ angular.module('IssueTrackingSystem.Issue', [])
                     });
                 };
             }
+
             /**
              * Getting Issues
              */
@@ -130,6 +132,7 @@ angular.module('IssueTrackingSystem.Issue', [])
                 };
                 $scope.changeIssueStatus = changeIssueStatus;
             }
+
             /**
              * Adding Issues
              */
@@ -143,7 +146,7 @@ angular.module('IssueTrackingSystem.Issue', [])
                         $scope.projects = projects.data;
                 });
                 $scope.addIssue = function (issue) {
-                    delete issue.Priorities;
+                    //delete issue.Priorities;
                     issue.IssueKey = issue.Title.match(/\b(\w)/g).join('');
 
                     issueFactory.addIssue(issue)

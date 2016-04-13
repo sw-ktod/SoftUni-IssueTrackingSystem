@@ -7,7 +7,7 @@
         <h2 >
             {{project.ProjectKey}}
             <a ng-if="isAdmin || isLead" class="btn btn-md btn-success" href="#/projects/{{project.Id}}/edit">Edit</a>
-            <a ng-if="isAdmin || isLead" class="btn btn-md btn-success" href="#/issues/add">Add Issue</a>
+            <a ng-if="isAdmin || isLead" class="btn btn-md btn-success" href="#/projects/{{project.Id}}/add-issue">Add Issue</a>
         </h2>
 
 
