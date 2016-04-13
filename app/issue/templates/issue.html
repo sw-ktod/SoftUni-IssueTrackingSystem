@@ -6,17 +6,27 @@
     <div class="item col-md-6 panel">
         <h2>
             {{issue.IssueKey}}
-            <a ng-if="isAdmin || isLead || isAssignee" class="btn btn-md btn-success" href="#/issues/{{issue.Id}}/edit">Edit</a>
+            <a ng-if="isAdmin || isLead" class="btn btn-md btn-success" href="#/issues/{{issue.Id}}/edit">Edit</a>
         </h2>
         <p><b>Title </b> {{issue.Title}}</p>
         <p><b>Description </b> {{issue.Description}}</p>
         <p><b>Assignee Id </b> (current id: {{issue.Assignee.Id}}) {{issue.Assignee.Username}}</p>
         <p><b>Priority Id </b> (current id: {{issue.Priority.Id}}) {{issue.Priority.Name}}</p>
+        <p><b>Due Date</b> {{issue.DueDate}}</p>
         <p>Author: {{issue.Author.Username}}</p>
         <p>Project: {{issue.Project.Name}}</p>
         <p>Status: {{issue.Status.Name}}</p>
         <p>Labels: {{issue.Labels}}</p>
     </div>
+
+    <div ng-if="isAdmin || isLead || isAssignee" class="item col-md-6 panel">
+        <h3>Available statuses:</h3>
+        <div ng-repeat="status in issue.AvailableStatuses">
+            <span class="col-md-4">-----{{status.Name}}</span>
+            <button ng-click="changeIssueStatus(issue.Id, status.Id)" class="btn btn-md btn-primary">Change</button>
+        </div>
+    </div>
+
     <div class="item col-md-12 panel">
         <div ng-if="issue.Comments" ng-repeat="comment in issue.Comments">
             <h4>{{comment.Author.Username}} - {{comment.CreatedOn}}</h4>
@@ -32,6 +42,7 @@
         </div>
         <button type="submit" class="btn btn-success" ng-click="addComment(comment)">Add Comment</button>
     </div>
+
 
 
 </div>

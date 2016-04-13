@@ -1,7 +1,7 @@
 <div class="row">
     <form name="loginForm" class="item col-md-6 panel">
         <h2>Login</h2>
-        <label class="form-control-label" for="username">Username</label>
+        <label class="form-control-label" for="username">Email</label>
         <br />
         <input class="form-control" type="text" id="username" ng-model="logUser.username">
         <br />
@@ -26,16 +26,16 @@
         <br />
         <input class="form-control" type="password" id="reg-confirmPassword" ng-model="user.ConfirmPassword">
         <br />
-        <label class="form-control-label" for="reg-name">Name</label>
-        <br />
-        <input class="form-control" type="text" id="reg-name" ng-model="user.Name">
-        <br />
-        <label class="form-control-label">Gender</label>
-        <br />
-        <input type="radio" value="1" name="reg-gender" ng-model="user.Gender"/> Male
-        <input type="radio" value="2" name="reg-gender" ng-model="user.Gender"/> Female
-        <input type="radio" value="0" name="reg-gender" ng-model="user.Gender"/> Other
-        <br />
+        <!--<label class="form-control-label" for="reg-name">Name</label>-->
+        <!--<br />-->
+        <!--<input class="form-control" type="text" id="reg-name" ng-model="user.Name">-->
+        <!--<br />-->
+        <!--<label class="form-control-label">Gender</label>-->
+        <!--<br />-->
+        <!--<input type="radio" value="1" name="reg-gender" ng-model="user.Gender"/> Male-->
+        <!--<input type="radio" value="2" name="reg-gender" ng-model="user.Gender"/> Female-->
+        <!--<input type="radio" value="0" name="reg-gender" ng-model="user.Gender"/> Other-->
+        <!--<br />-->
         <br />
         <button ng-disabled="registerForm.$invalid
             || !user.Password

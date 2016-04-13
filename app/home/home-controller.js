@@ -20,9 +20,11 @@
             'projectFactory',
             function homeCtrl($scope, $route, $location, authService, popService, identificationFactory, issueFactory, projectFactory) {
                 if($location.path() === '/'){
+                    /**
+                     * Logged user
+                     */
                     if(identificationFactory.userLogged()){
                         attachUserRelatedIssuesAndProjects();
-
                         $scope.attachUserRelatedIssues = attachUserRelatedIssues;
                         $scope.addProjectRedirect = function () {
                             $location.path('projects/add');
@@ -30,7 +32,11 @@
                         $scope.addIssueRedirect = function () {
                             $location.path('issues/add');
                         };
-                    }else{
+                    }
+                    /**
+                     * Guest user
+                     */
+                    else{
                         $scope.login = function (user) {
                             authService.login(user)
                                 .then(function (loggedUser) {
@@ -62,7 +68,7 @@
                                 });
                         };
                     }
-                }
+                };
                 function attachUserRelatedIssues(pageSize, pageNumber, orderBy){
                     issueFactory.getUserIssues(pageSize, pageNumber, orderBy)
                         .then(function (issues) {
@@ -90,8 +96,8 @@
                                         .then(function (userProjects) {
                                             userProjects.forEach(function (p) {
                                                 if(!projects.find(function (project) {
-                                                        return project.Id === p.Id;
-                                                    })){
+                                                    return project.Id === p.Id;
+                                                })){
                                                     projects.push({
                                                         Id: p.Id,
                                                         Name: p.Name
@@ -140,7 +146,7 @@
                             }
                         }
                     },
-                    templateUrl: 'user/templates/user-nav.html'
+                    templateUrl: 'home/templates/navigation.html'
                 };
         }]).directive('userDashboard',['identificationFactory',
             function userDashboard(identificationFactory) {

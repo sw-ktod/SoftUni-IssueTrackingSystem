@@ -52,7 +52,6 @@
             'identificationFactory',
             'popService',
             function projectCtrl($scope, $routeParams, $location, projectFactory, userFactory, issueFactory, identificationFactory, popService) {
-
                 /**
                  *  Editing project
                  */
@@ -146,9 +145,6 @@
                             $scope.projects = projects.data;
                         });
                 }
-
-
-
             }
         ])
 })();

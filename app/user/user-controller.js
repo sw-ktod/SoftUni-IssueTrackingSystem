@@ -3,15 +3,7 @@
 
     angular.module('IssueTrackingSystem.User', [])
         .config(['$routeProvider', function($routeProvider) {
-            $routeProvider.when('/profile', {
-                templateUrl: 'user/templates/user-edit.html',
-                controller: 'userCtrl',
-                resolve:{
-                    auth: function(identificationFactory){
-                        identificationFactory.requireAuthorization();
-                    }
-                }
-            }).when('/profile/password', {
+            $routeProvider.when('/profile/password', {
                 templateUrl: 'user/templates/user-edit-password.html',
                 controller: 'userCtrl',
                 resolve:{
@@ -28,13 +20,24 @@
                     }
                 }
             })
+            //.when('/profile', {
+            //    templateUrl: 'user/templates/user-edit.html',
+            //    controller: 'userCtrl',
+            //    resolve:{
+            //        auth: function(identificationFactory){
+            //            identificationFactory.requireAuthorization();
+            //        }
+            //    }
+            //})
         }])
         .controller('userCtrl',['$scope',
             '$location',
             'userFactory',
             'popService',
             function userCtrl($scope, $location, userFactory, popService) {
-
+                /**
+                 * Getting all users
+                 */
                 if($location.path() == '/users'){
                     userFactory.getUsers()
                         .then(function (users) {
@@ -44,25 +47,35 @@
                             popService.pop(error.status, message);
                     });
                 }
+                /**
+                 * Editing user password
+                 */
+                else if($location.path() === '/users/profile/password'){
+                    $scope.editPassword = function (user) {
+                        userFactory.editPassword(user)
+                            .then(function (success) {
+                                popService.pop(response.status, 'Successfully changed password');
+                                $location.path('/');
+                            }, function (error) {
+                                var message = popService.getErrorMessage(error);
+                                popService.pop(error.status, message);
+                            });
+                    };
+                }
+                /**
+                 * Editing user
+                 */
+                //else if($location.path() === 'users/profile'){
+                //    $scope.editUser = function (user) {
+                //        userFactory.editUser(user)
+                //            .then(function (response) {
+                //                popService.pop(response.status, response.data.message);
+                //            }, function (error) {
+                //                var message = popService.getErrorMessage(error);
+                //                popService.pop(error.status, message);
+                //            });
+                //    };
+                //}
 
-                $scope.editUser = function (user) {
-                    userFactory.editUser(user)
-                        .then(function (response) {
-                            popService.pop(response.status, response.data.message);
-                        }, function (error) {
-                            var message = popService.getErrorMessage(error);
-                            popService.pop(error.status, message);
-                    });
-                };
-                $scope.editPassword = function (user) {
-                    userFactory.editPassword(user)
-                        .then(function (success) {
-                            popService.pop(response.status, 'Successfully changed password');
-                            $location.path('/');
-                        }, function (error) {
-                            var message = popService.getErrorMessage(error);
-                            popService.pop(error.status, message);
-                    });
-                };
         }])
 })();

@@ -1,27 +1,25 @@
 <div nav-menu></div>
 <div>
     <h2 style="margin-top: 0"> Edit Issue</h2>
-    <fieldset class="col-md-6" ng-disabled="!isAdmin || !isLead">
+    <fieldset class="col-md-6">
             <div class="form-group">
                 <label for="issueTitle">Title</label>
                 <input type="text" class="form-control" id="issueTitle" ng-model="issue.Title" placeholder="Issue Title">
             </div>
             <div class="form-group">
                 <label for="issueAssignee">Assignee</label>
-                <select ng-disabled="!isAdmin || isLead" id="issueAssignee" ng-model="issue.Assignee.Id" class="form-control">
+                <select id="issueAssignee" ng-model="issue.Assignee.Id" class="form-control">
                     <option ng-repeat="user in users" value="{{user.Id}}" >{{user.Username}}</option>
                 </select>
             </div>
             <div class="form-group">
                 <label for="issueProject">Project</label>
-                <select id="issueProject" ng-change="attachProjectPriorities(issue.Project.Id)" ng-model="issue.Project.Id" class="form-control">
-                    <option ng-repeat="project in projects" value="{{project.Id}}" >{{project.Name}}</option>
+                <select ng-disabled="!isAdmin" id="issueProject" ng-model="issue.Project.Id" class="form-control" ng-options="project.Id as project.Name for project in projects">
                 </select>
             </div>
             <div class="form-group">
                 <label for="issuePriority">Priority</label>
-                <select ng-model="issue.PriorityId" id="issuePriority" class="form-control">
-                    <option ng-repeat="priority in issue.Priorities" value="{{priority.Id}}">{{priority.Name}}</option>
+                <select ng-model="issue.Priority.Id" id="issuePriority" class="form-control" ng-options="priority.Id as priority.Name for priority in issue.Priorities">
                 </select>
             </div>
             <div class="form-group">
@@ -34,11 +32,20 @@
             </div>
             <div class="form-group">
                 <label for="exampleInputPassword1">Labels (comma separated)</label>
-                <input type="text" class="form-control" ng-mdoel="issue.Labels" id="exampleInputPassword1" placeholder="Labels" value="Soft">
+                <input type="text" class="form-control" ng-model="issue.Labels" id="exampleInputPassword1" placeholder="Labels">
                 <br>
             </div>
             <button type="submit" class="btn btn-success" ng-click="editIssue(issue)">Edit Issue</button>
     </fieldset>
+
+    <div class="item col-md-6 panel">
+        <h3>Available statuses:</h3>
+        <div ng-repeat="status in issue.AvailableStatuses">
+            <span class="col-md-4">-----{{status.Name}}</span>
+            <button ng-click="changeIssueStatus(issue.Id, status.Id)" class="btn btn-md btn-primary">Change</button>
+
+        </div>
+    </div>
 
 
 </div>

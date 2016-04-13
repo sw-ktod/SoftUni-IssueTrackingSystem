@@ -1,10 +1,12 @@
+<div ng-if="isAdmin" class="col-md-8">
+    <button class="btn btn-success" ng-click="addIssueRedirect()">Add New Issue</button>
+    <button class="btn btn-success" ng-click="addProjectRedirect()">Add New Project</button>
+</div>
 <div>
     <h1>Dashboard</h1>
     <div class="col-md-4">
         <h2>Affiliated projects</h2>
         <a href="#/projects/{{project.Id}}" class="row" ng-repeat="project in projects">{{project.Name}}</a>
-        <br />
-        <button ng-if="userAdmin" class="btn btn-lg btn-success" ng-click="addProjectRedirect()">Add New Project</button>
     </div>
     <div class="col-md-8">
         <label for="pageSize">Issues per page</label>
@@ -41,7 +43,6 @@
         <ul ng-if="issuePages>1" class="pagination">
             <li ng-repeat="page in issuePages | range" ><a ng-click="attachUserRelatedIssues(pageSize, page, pageOrder)" href="#/">{{page}}</a></li>
         </ul>
-        <button ng-if="userAdmin" class="btn btn-lg btn-success" ng-click="addIssueRedirect()">Add New Issue</button>
     </div>
 
 </div>

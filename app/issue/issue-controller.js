@@ -31,16 +31,16 @@ angular.module('IssueTrackingSystem.Issue', [])
             })
     }]).controller('issueCtrl', ['$scope',
         '$location',
+        '$route',
         '$routeParams',
         'userFactory',
         'projectFactory',
         'issueFactory',
         'identificationFactory',
         'popService',
-        function issueCtrl($scope, $location, $routeParams, userFactory, projectFactory, issueFactory, identificationFactory, popService) {
+        function issueCtrl($scope, $location, $route, $routeParams, userFactory, projectFactory, issueFactory, identificationFactory, popService) {
             /**
-             *  Editing Issues
-             *
+             * Editing Issues
              */
             if($location.path().match('\/(?!index\.html)(issues\/[0-9]+\/edit)')){
                 issueFactory.getIssue($routeParams.id)
@@ -48,44 +48,52 @@ angular.module('IssueTrackingSystem.Issue', [])
                         if(!$scope.isAdmin){
                             identificationFactory.getOwnId()
                                 .then(function (id) {
-                                    projectFactory.getProject(issue.data.Project.Id)
-                                        .then(function (project) {
-                                            $scope.isLead = (project.data.Lead.Id === id);
+                                    projectFactory.getProjects()
+                                        .then(function (projects) {
+                                            var currentProject = projects.data.filter(function (project) {
+                                                return project.Id === issue.data.Project.Id
+                                            })[0];
+                                            $scope.isLead = (currentProject.Lead.Id === id);
                                             if(!$scope.isLead){
-                                                $scope.isAssignee = (issue.data.Assignee.Id === id);
-                                                if(!$scope.isAssignee){
-                                                    $location.path('/');
-                                                    popService.pop('404', 'Unauthorized');
-                                                    return;
-                                                }
+                                                $location.path('/');
+                                                popService.pop('404', 'Unauthorized');
+                                                return;
                                             }
+
+                                            $scope.projects = projects.data;
+                                            attachProjectPriorities(issue.data.Project.Id);
                                     });
-
                             });
+                        }
                         $scope.issue = issueFactory.translateLabels(issue.data);
-                    }
-                });
-                userFactory.getUsers()
-                    .then(function (users) {
-                        $scope.users=users;
-                });
-                projectFactory.getProjects()
-                    .then(function (projects) {
-                        $scope.projects = projects.data;
-                    });
+                        userFactory.getUsers()
+                            .then(function (users) {
+                                $scope.users=users;
+                        });
 
+                });
+
+                $scope.changeIssueStatus = changeIssueStatus;
                 $scope.editIssue = function (issue) {
-                    delete issue.Priorities;
-                    issue.IssueKey = issue.Title.match(/\b(\w)/g).join('');
 
-                    issueFactory.editIssue(issue)
+                    var issueModel = {
+                        Id: issue.Id,
+                        Title: issue.Title,
+                        Description: issue.Description,
+                        DueDate: issue.DueDate,
+                        AssigneeId: issue.Assignee.Id,
+                        PriorityId: issue.Priority.Id,
+                        Labels: issue.Labels
+                    };
+
+                    issueFactory.editIssue(issueModel)
                         .then(function (success) {
-                            $location.path('#/issues/'+issue.Id);
+                            $route.reload();
                             popService.pop(success.status, 'Issue edited successfully');
                         }, function (error) {
                             var message = popService.getErrorMessage(error);
                             popService.pop(error.status, message);
-                        });
+                    });
                 };
             }
             /**
@@ -103,6 +111,12 @@ angular.module('IssueTrackingSystem.Issue', [])
                                     });
                             });
                         $scope.issue = issueFactory.translateLabels(issue.data);
+                        issueFactory.getIssueComments(issue.data.Id)
+                            .then(function (comments) {
+                                $scope.issue.Comments = comments.data;
+                            }, function (error) {
+                                deferred.reject(error);
+                            });
                     });
                 $scope.addComment = function (comment) {
                     issueFactory.addComment($routeParams.id, comment)
@@ -112,8 +126,9 @@ angular.module('IssueTrackingSystem.Issue', [])
                         }, function (error) {
                             var message = popService.getErrorMessage(error);
                             popService.pop(error.status, message);
-                        })
-                }
+                    })
+                };
+                $scope.changeIssueStatus = changeIssueStatus;
             }
             /**
              * Adding Issues
@@ -140,14 +155,25 @@ angular.module('IssueTrackingSystem.Issue', [])
                             popService.pop(error.status, message);
                     });
                 };
+                $scope.attachProjectPriorities = attachProjectPriorities;
             }
-            $scope.attachProjectPriorities = function (id) {
+
+            function attachProjectPriorities(id) {
                 var project = $scope.projects.filter(function (project) {
                     return project.Id == id;
                 })[0];
                 $scope.issue.Priorities = project.Priorities;
             };
-
+            function changeIssueStatus(issueId, statusId) {
+                issueFactory.changeIssueStatus(issueId, statusId)
+                    .then(function (response) {
+                        popService.pop(response.status, 'Successfully applied issue status');
+                        $route.reload();
+                    }, function (error) {
+                        var message = popService.getErrorMessage(error);
+                        popService.pop(error.status, message);
+                    })
+            }
     }])
 
 })();
