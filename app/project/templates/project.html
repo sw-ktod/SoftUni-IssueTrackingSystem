@@ -20,15 +20,20 @@
 
     </div>
     <div class="item col-md-7">
-
+        <!--filter=Priority.Name == \"In Progress\" or DueDate.Day == 21-->
         <label for="issue-filter"></label>
-        <select id="issue-filter" ng-model="issueFilter">
-            <option ng-click="filterIssues(issueFilter)" value="All">All</option>
-            <option ng-click="filterIssues(issueFilter)" ng-selected="true" value="Assigned">Assigned</option>
-            <option ng-click="filterIssues(issueFilter)" value="Author">Author</option>
-            <option ng-click="filterIssues(issueFilter)" value="Open">Open</option>
-            <option ng-click="filterIssues(issueFilter)" value="InProgress">In progress</option>
-            <option ng-click="filterIssues(issueFilter)" value="StoppedProgress">Stopped progress</option>
+        <select ng-change="filterIssues(pageSize, page, issueFilter)" id="issue-filter" ng-model="issueFilter">
+            <option value='Project.Id == {{project.Id}}'>All</option>
+            <option ng-selected="true" value='Assignee.Id == "{{user.Id}}" and Project.Id == {{project.Id}}'>Assigned</option>
+            <option value='Author.Id == "{{user.Id}}" and Project.Id == {{project.Id}}'>Author</option>
+            <option value='Status.Name != "Closed" and Project.Id == {{project.Id}}'>Open</option>
+            <option value='Status.Name == "InProgress" and Project.Id == {{project.Id}}'>In progress</option>
+            <option value='Status.Name == "StoppedProgress" and Project.Id == {{project.Id}}'>Stopped progress</option>
+        </select>
+        <select ng-change="filterIssues(pageSize, page, issueFilter)" ng-model="pageSize" id="pageSize">
+            <option ng-selected="true" value="3">3</option>
+            <option value="5">5</option>
+            <option value="10">10</option>
         </select>
         <span ng-if="issueCount>0">{{issueCount}} issues </span>
         <table class="table table-hover ">
@@ -51,7 +56,9 @@
             </tr>
             </tbody>
         </table>
-
+        <ul ng-if="issuePages>1" class="pagination">
+            <li ng-repeat="page in issuePages | range" ><a ng-click="filterIssues(pageSize, page, issueFilter)" href="">{{page}}</a></li>
+        </ul>
 
     </div>
 

@@ -31,9 +31,9 @@ angular.module('IssueTrackingSystem.Issue', [])
             if($location.path().match('\/(?!index\.html)(projects\/[0-9]+\/add-issue)')){
                 projectFactory.getProject($routeParams.id)
                     .then(function (project) {
-                        console.log(project);
                         identificationFactory.requireLead(project.Lead.Id);
                         $scope.project = project;
+                        console.log($scope.project.Priorities);
                 });
                 userFactory.getUsers()
                     .then(function (users) {
@@ -86,7 +86,7 @@ angular.module('IssueTrackingSystem.Issue', [])
                             .then(function (isAssignee) {
                                 $scope.isAssignee = isAssignee;
                         });
-                        $scope.issue = issueData;
+                        $scope.issue = issueFactory.translateLabels(issueData);
                         issueFactory.getIssueComments($routeParams.id)
                             .then(function (comments) {
                                 $scope.issue.Comments = comments;

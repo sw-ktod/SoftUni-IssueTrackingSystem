@@ -9,8 +9,7 @@
                 var deferred = $q.defer();
                 $http.get(BASE_URL + 'issues/' + id)
                     .then(function (response) {
-                        var issue = translateLabels(response.data);
-                        deferred.resolve(issue);
+                        deferred.resolve(response.data);
                     }, function (error) {
                         deferred.reject(error);
                     });
@@ -107,6 +106,18 @@
                     });
                 return deferred.promise;
             };
+            function getIssuesByFilter(pageSize, page, filter){
+                var deferred = $q.defer();
+                $http.get(BASE_URL + 'issues/?pageSize=' + pageSize
+                            + '&pageNumber=' + page
+                            + '&filter=' + filter)
+                    .then(function (response) {
+                        deferred.resolve(response.data);
+                    }, function (error) {
+                        deferred.reject(error);
+                    });
+                return deferred.promise;
+            };
             function translateLabels(issue){
                 var labels = '';
                 issue.Labels.forEach(function (label) {
@@ -140,6 +151,7 @@
                 editIssue: editIssue,
                 getUserIssues: userIssues,
                 getIssuesByProject: getIssuesByProject,
+                getIssuesByFilter: getIssuesByFilter,
                 getIssueComments: getIssueComments,
                 addComment: addComment,
                 changeIssueStatus: changeIssueStatus,

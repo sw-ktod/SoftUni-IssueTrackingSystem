@@ -55,12 +55,12 @@
                     identificationFactory.requireAuthorization();
                     projectFactory.getProject($routeParams.id)
                         .then(function (project) {
-                            $scope.project = project;
+                            $scope.project = projectFactory.translatePrioritiesAndLabels(project);
                             identificationFactory.isLead(project.Lead.Id)
                                 .then(function (isLead) {
                                     $scope.isLead = isLead;
                             });
-                            filterIssues('Assigned');
+                            filterIssues();
                             $scope.filterIssues = filterIssues;
                     });
 
@@ -118,50 +118,21 @@
                         $scope.project.ProjectKey = '';
                     }
                 }
-                function filterIssues(filter){
+                function filterIssues(pageSize, page, filter){
+                    identificationFactory.getOwnId()
+                        .then(function (id) {
+                            pageSize = pageSize || 3;
+                            page = page || 1;
+                            filter = filter || 'Assignee.Id == "'+ id + '" and Project.Id == ' + $routeParams.id;
 
-                    issueFactory.getIssuesByProject($routeParams.id)
-                        .then(function (projectIssues) {
-                            identificationFactory.getOwnId()
-                                .then(function (id) {
-                                    switch(filter){
-                                        case 'All':
-                                            $scope.project.Issues = projectIssues;
-                                            break;
-                                        case 'Assigned':
-                                            $scope.project.Issues = projectIssues.filter(function (issue) {
-                                                return issue.Assignee.Id === id;
-                                            });
-                                            break;
-                                        case 'Author':
-                                            $scope.project.Issues = projectIssues.filter(function (issue) {
-                                                return issue.Author.Id === id;
-                                            });
-                                            break;
-                                        case 'Open':
-                                            $scope.project.Issues = projectIssues.filter(function (issue) {
-                                                return issue.Status.Name !== 'Closed';
-                                            });
-                                            break;
-                                        case 'InProgress':
-                                            $scope.project.Issues = projectIssues.filter(function (issue) {
-                                                return issue.Status.Name === 'InProgress';
-                                            });
-                                            break;
-                                        case 'StoppedProgress':
-                                            $scope.project.Issues = projectIssues.filter(function (issue) {
-                                                return issue.Status.Name === 'StoppedProgress';
-                                            });
-                                            break;
-                                        default:
-                                            break;
-                                    }
-                                    $scope.issueCount = $scope.project.Issues.length;
-                                });
-                        });
+                            issueFactory.getIssuesByFilter(pageSize, page, filter)
+                                .then(function (response) {
+                                    $scope.project.Issues = response.Issues;
+                                    $scope.issueCount = response.TotalCount;
+                                    $scope.issuePages = response.TotalPages;
+                            });
+                    });
                 }
             }
-        ]).filter('AssignedIssues', ['$scope',function ($scope) {
-                $scope.project.Issues = projectIssues;
-        }])
+        ])
 })();

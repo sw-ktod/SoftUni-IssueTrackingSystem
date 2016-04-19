@@ -19,8 +19,7 @@
                     var deferred = $q.defer();
                     $http.get(BASE_URL + 'projects/' + id)
                         .then(function (response) {
-                            var project = translatePrioritiesAndLabels(response.data);
-                            deferred.resolve(project);
+                            deferred.resolve(response.data);
                         }, function (error){
                             deferred.reject(error);
                         });
