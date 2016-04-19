@@ -1,6 +1,6 @@
 (function () {
     'use strict';
-    angular.module('IssueTrackingSystem.Issue.Factory', [])
+    angular.module('IssueTrackingSystem.Issue')
     .factory('issueFactory', ['$http',
         '$q',
         'BASE_URL',
@@ -9,7 +9,8 @@
                 var deferred = $q.defer();
                 $http.get(BASE_URL + 'issues/' + id)
                     .then(function (response) {
-                        deferred.resolve(response);
+                        var issue = translateLabels(response.data);
+                        deferred.resolve(issue);
                     }, function (error) {
                         deferred.reject(error);
                     });
@@ -27,9 +28,20 @@
                 return deferred.promise;
             };
             function editIssue(issue){
-                issue = manageLabels(issue);
+
+                var issueModel = {
+                    Id: issue.Id,
+                    Title: issue.Title,
+                    Description: issue.Description,
+                    DueDate: issue.DueDate,
+                    AssigneeId: issue.Assignee.Id,
+                    PriorityId: issue.Priority.Id,
+                    Labels: issue.Labels
+                };
+
+                issueModel = manageLabels(issueModel);
                 var deferred = $q.defer();
-                $http.put(BASE_URL + 'issues/' + issue.Id, issue)
+                $http.put(BASE_URL + 'issues/' + issue.Id, issueModel)
                     .then(function (response) {
                         deferred.resolve(response);
                     },
@@ -48,7 +60,7 @@
                         + '&pageNumber=' + pageNumber
                         + '&orderBy=' + orderBy)
                     .then(function (response) {
-                        deferred.resolve(response);
+                        deferred.resolve(response.data);
                     }, function (error) {
                         deferred.reject(error);
                     });
@@ -58,7 +70,7 @@
                 var deferred = $q.defer();
                 $http.get(BASE_URL + 'issues/' + id + '/comments')
                     .then(function (response) {
-                        deferred.resolve(response);
+                        deferred.resolve(response.data);
                     }, function (error) {
                         deferred.reject(error);
                     });
@@ -79,7 +91,7 @@
                 var deferred = $q.defer();
                 $http.put(BASE_URL + 'issues/' + issueId + '/changestatus?statusId=' + statusId)
                     .then(function (response) {
-                        deferred.resolve(response);
+                        deferred.resolve(response.data);
                     }, function (error) {
                         deferred.reject(error);
                     });

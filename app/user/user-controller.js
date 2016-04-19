@@ -5,20 +5,10 @@
         .config(['$routeProvider', function($routeProvider) {
             $routeProvider.when('/profile/password', {
                 templateUrl: 'user/templates/user-edit-password.html',
-                controller: 'userCtrl',
-                resolve:{
-                    auth: function(identificationFactory){
-                        identificationFactory.requireAuthorization();
-                    }
-                }
+                controller: 'userCtrl'
             }).when('/users', {
                 templateUrl: 'user/templates/users-all.html',
-                controller: 'userCtrl',
-                resolve:{
-                    auth: function(identificationFactory){
-                        identificationFactory.requireAuthorization();
-                    }
-                }
+                controller: 'userCtrl'
             })
             //.when('/profile', {
             //    templateUrl: 'user/templates/user-edit.html',
@@ -39,6 +29,7 @@
                  * Getting all users
                  */
                 if($location.path() == '/users'){
+                    identificationFactory.requireAdmin();
                     userFactory.getUsers()
                         .then(function (users) {
                             $scope.users = users;
@@ -51,16 +42,9 @@
                  * Editing user password
                  */
                 else if($location.path() === '/users/profile/password'){
-                    $scope.editPassword = function (user) {
-                        userFactory.editPassword(user)
-                            .then(function (success) {
-                                popService.pop(response.status, 'Successfully changed password');
-                                $location.path('/');
-                            }, function (error) {
-                                var message = popService.getErrorMessage(error);
-                                popService.pop(error.status, message);
-                            });
-                    };
+                    identificationFactory.requireAuthorization();
+
+                    $scope.editPassword = editPassword;
                 }
                 /**
                  * Editing user
@@ -76,6 +60,17 @@
                 //            });
                 //    };
                 //}
+
+                function editPassword(userData){
+                    userFactory.editPassword(userData)
+                        .then(function (response) {
+                            popService.pop(response.status, 'Successfully changed password');
+                            $location.path('/');
+                        }, function (error) {
+                            var message = popService.getErrorMessage(error);
+                            popService.pop(error.status, message);
+                        });
+                }
 
         }])
 })();

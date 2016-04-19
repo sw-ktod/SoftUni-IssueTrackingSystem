@@ -3,14 +3,14 @@
         <h2>Login</h2>
         <label class="form-control-label" for="username">Email</label>
         <br />
-        <input class="form-control" type="text" id="username" ng-model="logUser.username">
+        <input class="form-control" type="text" id="username" ng-model="logUser.Email">
         <br />
         <label class="form-control-label" for="password">Password</label>
         <br />
-        <input class="form-control" type="password" id="password" ng-model="logUser.password">
+        <input class="form-control" type="password" id="password" ng-model="logUser.Password">
         <br />
         <br />
-        <button ng-disabled="loginForm.$invalid || !logUser.username || !logUser.password" class="btn btn-primary form-control" ng-click="login(logUser)">Login</button>
+        <button ng-disabled="loginForm.$invalid || !logUser.Email || !logUser.Password" class="btn btn-primary form-control" ng-click="login(logUser)">Login</button>
     </form>
     <form name="registerForm" class="item col-md-6 panel">
         <h2>Register</h2>

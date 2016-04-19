@@ -1,9 +1,8 @@
 <div nav-menu></div>
-
-<div>
+<div class="col-md-12" >
     <h1>Project page</h1>
     <br />
-    <div class="item col-md-4">
+    <div class="item col-md-5">
         <h2 >
             {{project.ProjectKey}}
             <a ng-if="isAdmin || isLead" class="btn btn-md btn-success" href="#/projects/{{project.Id}}/edit">Edit</a>
@@ -20,7 +19,7 @@
         <p>Priorities: {{project.Priorities}}</p>
 
     </div>
-    <div class="item col-md-5">
+    <div class="item col-md-7">
 
         <table class="table table-hover ">
             <thead>

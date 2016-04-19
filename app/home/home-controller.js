@@ -37,50 +37,54 @@
                      * Guest user
                      */
                     else{
-                        $scope.login = function (user) {
-                            authService.login(user)
-                                .then(function (loggedUser) {
-                                    identificationFactory.setCookie('access_token', loggedUser.access_token);
-                                    identificationFactory.getUser()
-                                        .then(function (self) {
-                                            var userString = JSON.stringify(self.data);
-                                            identificationFactory.setCookie('user', userString);
-                                            $route.reload();
-                                            popService.pop(200, 'Successfully logged in');
-                                        });
-                                }, function (error) {
-                                    var message = popService.getErrorMessage(error);
-                                    popService.pop(error.status, message);
-                                });
-                        };
-                        $scope.register = function (user) {
-                            authService.register(user)
-                                .then(function (registeredUser) {
-                                    identificationFactory.setCookie(registeredUser);
-                                    authService.login(user)
-                                        .then(function () {
-                                            $route.reload();
-                                            popService.pop(200, 'Successfully registered');
-                                        })
-                                }, function (error) {
-                                    var message = popService.getErrorMessage(error);
-                                    popService.pop(error.status, message);
-                                });
-                        };
+                        $scope.login = login;
+                        $scope.register = register;
                     }
                 };
+
+                function login(user){
+                    if(user){
+                        authService.login(user)
+                            .then(function (loggedUser) {
+                                identificationFactory.setCookie('access_token', loggedUser.access_token);
+                                identificationFactory.getUser()
+                                    .then(function (self) {
+                                        var userString = JSON.stringify(self);
+                                        identificationFactory.setCookie('user', userString);
+                                        $route.reload();
+                                        popService.pop(200, 'Successfully logged in');
+                                    });
+                            }, function (error) {
+                                var message = popService.getErrorMessage(error);
+                                popService.pop(error.status, message);
+                        });
+                    }
+                }
+                function register(user){
+                    if(user){
+                        authService.register(user)
+                            .then(function (registeredUser) {
+                                identificationFactory.setCookie(registeredUser);
+                                login(user);
+                            }, function (error) {
+                                var message = popService.getErrorMessage(error);
+                                popService.pop(error.status, message);
+                        });
+                    }
+                }
+
                 function attachUserRelatedIssues(pageSize, pageNumber, orderBy){
                     issueFactory.getUserIssues(pageSize, pageNumber, orderBy)
-                        .then(function (issues) {
-                            $scope.issuePages = issues.data.TotalPages;
-                            $scope.issues = issues.data.Issues;
+                        .then(function (data) {
+                            $scope.issuePages = data.TotalPages;
+                            $scope.issues = data.Issues;
                     });
                 };
                 function attachUserRelatedProjects(){
                     issueFactory.getUserIssues(999999, 1)
-                        .then(function (issues) {
+                        .then(function (data) {
                             var projects = [];
-                            issues.data.Issues.forEach(function (issue) {
+                            data.Issues.forEach(function (issue) {
                                 if(!projects.find(function (project) {
                                         return project.Id === issue.Project.Id;
                                     })){
@@ -143,6 +147,12 @@
                             pre: function(scope){
                                 scope.userLogged = identificationFactory.userLogged();
                                 scope.isAdmin = identificationFactory.isAdmin();
+                                if(scope.userLogged){
+                                    identificationFactory.getUser()
+                                        .then(function (user) {
+                                            scope.user = user;
+                                    });
+                                }
                             }
                         }
                     },

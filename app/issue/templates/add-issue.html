@@ -1,10 +1,10 @@
 <div nav-menu></div>
 <div class="col-md-6">
     <h2 style="margin-top: 0"> Add new Issue</h2>
-    <form>
+    <form name="add-issue-form">
         <div class="form-group">
             <label for="issueTitle">Title</label>
-            <input type="text" class="form-control" id="issueTitle" ng-model="issue.Title" placeholder="Issue Title">
+            <input type="text" ng-change="setIssueKey()" class="form-control" id="issueTitle" ng-model="issue.Title" placeholder="Issue Title">
         </div>
         <div class="form-group">
             <label for="issueAssignee">Assignee</label>
@@ -13,15 +13,19 @@
             </select>
         </div>
         <div class="form-group">
+            <label for="projectKey">Issue Key</label>
+            <input id="projectKey" ng-model="issue.IssueKey" type="text" class="form-control" id="exampleInputEmail1" placeholder="Issue Key" ng-disabled="true">
+        </div>
+        <div class="form-group">
             <label for="issueProject">Project</label>
-            <select id="issueProject" ng-change="attachProjectPriorities(issue.ProjectId)" ng-model="issue.ProjectId" class="form-control">
-                <option ng-repeat="project in projects" value="{{project.Id}}" >{{project.Name}}</option>
+            <select ng-disabled="true" id="issueProject" ng-model="issue.ProjectId" class="form-control">
+                <option selected value="{{project.Id}}" >{{project.Name}}</option>
             </select>
         </div>
         <div class="form-group">
             <label for="issuePriority">Priority</label>
             <select ng-model="issue.PriorityId" id="issuePriority" class="form-control">
-                <option ng-repeat="priority in issue.Priorities" value="{{priority.Id}}">{{priority.Name}}</option>
+                <option ng-repeat="priority in project.Priorities" value="{{priority.Id}}">{{priority.Name}}</option>
             </select>
         </div>
         <div class="form-group">
@@ -37,6 +41,6 @@
             <input type="text" class="form-control" ng-model="issue.Labels" id="issueLabels" placeholder="Soft, Uni">
             <br>
         </div>
-        <button type="submit" class="btn btn-success" ng-click="addIssue(issue)">Add Issue</button>
+        <button type="submit" class="btn btn-success"  ng-click="addIssue(issue)">Add Issue</button>
     </form>
 </div>

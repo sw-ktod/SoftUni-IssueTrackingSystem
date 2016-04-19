@@ -7,39 +7,19 @@
                 $routeProvider
                     .when('/projects',{
                         templateUrl: 'project/templates/projects-all.html',
-                        controller: 'projectCtrl',
-                        resolve:{
-                            auth: function(identificationFactory){
-                                identificationFactory.requireAuthorization();
-                            }
-                        }
+                        controller: 'projectCtrl'
                     })
                     .when('/projects/add', {
                         templateUrl: 'project/templates/add-project.html',
-                        controller: 'projectCtrl',
-                        resolve:{
-                            auth: function(identificationFactory){
-                                identificationFactory.requireAdmin();
-                            }
-                        }
+                        controller: 'projectCtrl'
                     })
                     .when('/projects/:id',{
                         templateUrl: 'project/templates/project.html',
-                        controller: 'projectCtrl',
-                        resolve:{
-                            auth: function(identificationFactory){
-                                identificationFactory.requireAuthorization();
-                            }
-                        }
+                        controller: 'projectCtrl'
                     })
                     .when('/projects/:id/edit',{
                         templateUrl: 'project/templates/edit-project.html',
-                        controller: 'projectCtrl',
-                        resolve:{
-                            auth: function(identificationFactory){
-                                identificationFactory.requireAuthorization();
-                            }
-                        }
+                        controller: 'projectCtrl'
                     })
 
         }])
@@ -58,92 +38,94 @@
                 if($location.path().match('\/(?!index\.html)(projects\/[0-9]+\/edit)')){
                     projectFactory.getProject($routeParams.id)
                         .then(function (project) {
-                            if(!$scope.isAdmin){
-                                identificationFactory.getOwnId()
-                                    .then(function (id) {
-                                        $scope.isLead = (project.data.Lead.Id === id);
+                            identificationFactory.requireLead(project.Lead.Id);
 
-                                        if(!$scope.isLead){
-                                            $location.path('/');
-                                            popService.pop('404', 'Unauthorized');
-                                            return;
-                                        }
-                                });
-                            }
-                            $scope.project = projectFactory.translatePrioritiesAndLabels(project.data);
+                            $scope.project = project;
                             userFactory.getUsers()
                                 .then(function (users) {
                                     $scope.users=users;
                             });
                         });
-                    $scope.editProject = function (project) {
-                        project.LeadId = project.Lead.Id;
-                        delete project.Lead;
-                        projectFactory.editProject(project)
-                            .then(function (response) {
-                                $location.path('#/projects/' + project.Id);
-                                popService.pop(response.status, 'Project edited successfully');
-                            }, function (error) {
-                                var message = popService.getErrorMessage(error);
-                                popService.pop(error.status, message);
-                            });
-                    };
+                    $scope.editProject = editProject;
                 }
                 /**
                  *  Getting project
                  */
                 else if($location.path().match('\/(?!index\.html)(projects\/[0-9]+)')){
+                    identificationFactory.requireAuthorization();
                     projectFactory.getProject($routeParams.id)
                         .then(function (project) {
+                            $scope.project = project;
+                            identificationFactory.isLead(project.Lead.Id)
+                                .then(function (isLead) {
+                                    $scope.isLead = isLead;
+                            });
+                    });
+                    issueFactory.getIssuesByProject($routeParams.id)
+                        .then(function (projectIssues) {
+                            if($scope.isLead || $scope.isAdmin){
+                                $scope.project.issues = projectIssues;
+                                return;
+                            }
                             identificationFactory.getOwnId()
                                 .then(function (id) {
-                                    $scope.isLead = (project.data.Lead.Id === id);
-
-                                    $scope.project = projectFactory.translatePrioritiesAndLabels(project.data);
-                                    issueFactory.getIssuesByProject($routeParams.id)
-                                        .then(function (projectIssues) {
-
-                                            //user associated issues
-
-                                            $scope.project.issues = projectIssues.filter(function (issue) {
-                                                return issue.Assignee.Id === id;
-                                            });
-                                            if($scope.isLead || $scope.isAdmin){
-                                                $scope.project.issues = projectIssues;
-                                            }
+                                    $scope.project.issues = projectIssues.filter(function (issue) {
+                                        return issue.Assignee.Id === id;
                                     });
-
-                            });
-
+                                });
                         });
                 }
                 /**
                  *  Adding project
                  */
                 else if($location.path() == '/projects/add'){
+                    identificationFactory.requireAdmin();
                     userFactory.getUsers()
                         .then(function (users) {
                             $scope.users=users;
-                        });
-                    $scope.addProject = function (project) {
-                        projectFactory.addProject(project)
-                            .then(function (response) {
-                                $location.path('#/projects/' + response.data.Id);
-                                popService.pop(response.status, 'Project edited successfully');
-                            }, function (error) {
-                                var message = popService.getErrorMessage(error);
-                                popService.pop(response.status, message);
-                            });
-                    };
+                    });
+                    $scope.setProjectKey = setProjectKey;
+                    $scope.addProject = addProject;
                 }
                 /**
                  *  Getting all projects
                  */
                 else if($location.path() == '/projects'){
+                    identificationFactory.requireAuthorization();
                     projectFactory.getProjects()
                         .then(function (projects) {
-                            $scope.projects = projects.data;
+                            $scope.projects = projects;
+                    });
+                }
+
+                function addProject(project){
+                    projectFactory.addProject(project)
+                        .then(function (response) {
+                            $location.path('#/projects/' + response.data.Id);
+                            popService.pop(response.status, 'Project edited successfully');
+                        }, function (error) {
+                            var message = popService.getErrorMessage(error);
+                            popService.pop(response.status, message);
+                    });
+                }
+                function editProject(project){
+                    project.LeadId = project.Lead.Id;
+                    delete project.Lead;
+                    projectFactory.editProject(project)
+                        .then(function (response) {
+                            $location.path('/projects/' + project.Id);
+                            popService.pop(response.status, 'Project edited successfully');
+                        }, function (error) {
+                            var message = popService.getErrorMessage(error);
+                            popService.pop(error.status, message);
                         });
+                }
+                function setProjectKey() {
+                    if($scope.project.Name){
+                        $scope.project.ProjectKey = $scope.project.Name.match(/\b(\w)/g).join('');
+                    }else{
+                        $scope.project.ProjectKey = '';
+                    }
                 }
             }
         ])

@@ -1,6 +1,6 @@
 (function () {
     'use strict'
-    angular.module('IssueTrackingSystem.Project.Factory', [])
+    angular.module('IssueTrackingSystem.Project')
         .factory('projectFactory',['$http',
             '$q',
             'BASE_URL',
@@ -9,7 +9,7 @@
                     var deferred = $q.defer();
                     $http.get(BASE_URL + 'projects')
                         .then(function (response) {
-                            deferred.resolve(response);
+                            deferred.resolve(response.data);
                         }, function (error){
                             deferred.reject(error);
                         });
@@ -19,7 +19,8 @@
                     var deferred = $q.defer();
                     $http.get(BASE_URL + 'projects/' + id)
                         .then(function (response) {
-                            deferred.resolve(response);
+                            var project = translatePrioritiesAndLabels(response.data);
+                            deferred.resolve(project);
                         }, function (error){
                             deferred.reject(error);
                         });
@@ -27,7 +28,6 @@
                 }
                 function addProject(project) {
                     project = managePrioritiesAndLabels(project);
-                    project.ProjectKey = project.Name.match(/\b(\w)/g).join('');
 
                     var deferred = $q.defer();
                     $http.post(BASE_URL + 'projects', project)
@@ -54,8 +54,8 @@
                     var deferred = $q.defer();
 
                     getProjects()
-                        .then(function (response) {
-                            var own = response.data.filter(function (project) {
+                        .then(function (projects) {
+                            var own = projects.filter(function (project) {
                                 return project.Lead.Id === userId;
                             });
                             deferred.resolve(own)

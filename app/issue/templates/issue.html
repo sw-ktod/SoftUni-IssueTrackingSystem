@@ -28,6 +28,8 @@
     </div>
 
     <div class="item col-md-12 panel">
+        <h3><b>Comments:</b></h3>
+        <br />
         <div ng-if="issue.Comments" ng-repeat="comment in issue.Comments">
             <h4>{{comment.Author.Username}} - {{comment.CreatedOn}}</h4>
             <p>{{comment.Text}}</p>

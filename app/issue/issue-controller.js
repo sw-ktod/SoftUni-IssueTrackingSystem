@@ -4,30 +4,15 @@
 angular.module('IssueTrackingSystem.Issue', [])
     .config(['$routeProvider',
         function ($routeProvider){
-            $routeProvider.when('/issues/add',{
+            $routeProvider.when('/projects/:id/add-issue',{
                 templateUrl: 'issue/templates/add-issue.html',
-                controller: 'issueCtrl',
-                resolve:{
-                    auth: function(identificationFactory){
-                        identificationFactory.requireAuthorization();
-                    }
-                }
+                controller: 'issueCtrl'
             }).when('/issues/:id/edit',{
                 templateUrl: 'issue/templates/edit-issue.html',
-                controller: 'issueCtrl',
-                resolve:{
-                    auth: function(identificationFactory){
-                        identificationFactory.requireAuthorization();
-                    }
-                }
+                controller: 'issueCtrl'
             }).when('/issues/:id',{
                 templateUrl: 'issue/templates/issue.html',
-                controller: 'issueCtrl',
-                resolve:{
-                    auth: function(identificationFactory){
-                        identificationFactory.requireAuthorization();
-                    }
-                }
+                controller: 'issueCtrl'
             })
     }]).controller('issueCtrl', ['$scope',
         '$location',
@@ -41,126 +26,107 @@ angular.module('IssueTrackingSystem.Issue', [])
         function issueCtrl($scope, $location, $route, $routeParams, userFactory, projectFactory, issueFactory, identificationFactory, popService) {
 
             /**
-             * Editing Issues
-             */
-            if($location.path().match('\/(?!index\.html)(issues\/[0-9]+\/edit)')){
-                issueFactory.getIssue($routeParams.id)
-                    .then(function (issue) {
-                        if(!$scope.isAdmin){
-                            identificationFactory.getOwnId()
-                                .then(function (id) {
-                                    projectFactory.getProjects()
-                                        .then(function (projects) {
-                                            var currentProject = projects.data.filter(function (project) {
-                                                return project.Id === issue.data.Project.Id
-                                            })[0];
-                                            $scope.isLead = (currentProject.Lead.Id === id);
-                                            if(!$scope.isLead){
-                                                $location.path('/');
-                                                popService.pop('404', 'Unauthorized');
-                                                return;
-                                            }
-
-                                            $scope.projects = projects.data;
-                                            attachProjectPriorities(issue.data.Project.Id);
-                                    });
-                            });
-                        }
-                        $scope.issue = issueFactory.translateLabels(issue.data);
-                        userFactory.getUsers()
-                            .then(function (users) {
-                                $scope.users=users;
-                        });
-
-                });
-
-                $scope.changeIssueStatus = changeIssueStatus;
-                $scope.editIssue = function (issue) {
-
-                    var issueModel = {
-                        Id: issue.Id,
-                        Title: issue.Title,
-                        Description: issue.Description,
-                        DueDate: issue.DueDate,
-                        AssigneeId: issue.Assignee.Id,
-                        PriorityId: issue.Priority.Id,
-                        Labels: issue.Labels
-                    };
-
-                    issueFactory.editIssue(issueModel)
-                        .then(function (success) {
-                            $route.reload();
-                            popService.pop(success.status, 'Issue edited successfully');
-                        }, function (error) {
-                            var message = popService.getErrorMessage(error);
-                            popService.pop(error.status, message);
-                    });
-                };
-            }
-
-            /**
-             * Getting Issues
-             */
-            else if($location.path().match('\/(?!index\.html)(issues\/[0-9]+)')){
-                issueFactory.getIssue($routeParams.id)
-                    .then(function (issue) {
-                        identificationFactory.getOwnId()
-                            .then(function (id) {
-                                projectFactory.getProject(issue.data.Project.Id)
-                                    .then(function (project) {
-                                        $scope.isLead = (project.data.Lead.Id === id);
-                                        $scope.isAssignee = (issue.data.Assignee.Id === id);
-                                    });
-                            });
-                        $scope.issue = issueFactory.translateLabels(issue.data);
-                        issueFactory.getIssueComments(issue.data.Id)
-                            .then(function (comments) {
-                                $scope.issue.Comments = comments.data;
-                            }, function (error) {
-                                deferred.reject(error);
-                            });
-                    });
-                $scope.addComment = function (comment) {
-                    issueFactory.addComment($routeParams.id, comment)
-                        .then(function (response) {
-                            popService.pop(response.status, 'Comment added successfuly');
-                            $scope.issue.Comments = response.data;
-                        }, function (error) {
-                            var message = popService.getErrorMessage(error);
-                            popService.pop(error.status, message);
-                    })
-                };
-                $scope.changeIssueStatus = changeIssueStatus;
-            }
-
-            /**
              * Adding Issues
              */
-            else if($location.path() == '/issues/add'){
+            if($location.path().match('\/(?!index\.html)(projects\/[0-9]+\/add-issue)')){
+                projectFactory.getProject($routeParams.id)
+                    .then(function (project) {
+                        console.log(project);
+                        identificationFactory.requireLead(project.Lead.Id);
+                        $scope.project = project;
+                });
                 userFactory.getUsers()
                     .then(function (users) {
                         $scope.users=users;
                 });
-                projectFactory.getProjects()
-                    .then(function (projects) {
-                        $scope.projects = projects.data;
-                });
-                $scope.addIssue = function (issue) {
-                    //delete issue.Priorities;
-                    issue.IssueKey = issue.Title.match(/\b(\w)/g).join('');
-
-                    issueFactory.addIssue(issue)
-                        .then(function (success) {
-                            $location.path('/');
-                            popService.pop(success.status, 'Issue added successfully');
-                        }, function (error) {
-                            var message = popService.getErrorMessage(error);
-                            popService.pop(error.status, message);
+                $scope.addIssue = addIssue;
+                $scope.setIssueKey = setIssueKey;
+            }
+            /**
+             * Editing Issues
+             */
+            else if($location.path().match('\/(?!index\.html)(issues\/[0-9]+\/edit)')){
+                issueFactory.getIssue($routeParams.id)
+                    .then(function (issue) {
+                        $scope.issue = issue;
+                        projectFactory.getProjects()
+                            .then(function (projects) {
+                                var current = projects.filter(function (project) {
+                                    return project.Id === issue.Project.Id
+                                })[0];
+                                identificationFactory.requireLead(current.Lead.Id);
+                                $scope.projects = projects;
+                                attachProjectPriorities(issue.Project.Id);
                     });
-                };
-                $scope.attachProjectPriorities = attachProjectPriorities;
+                });
+                userFactory.getUsers()
+                    .then(function (users) {
+                        $scope.users=users;
+                });
+
+                $scope.changeIssueStatus = changeIssueStatus;
+                $scope.editIssue = editIssue;
+            }
+            /**
+             * Getting Issues
+             */
+            else if($location.path().match('\/(?!index\.html)(issues\/[0-9]+)')){
+                identificationFactory.requireAuthorization();
+                issueFactory.getIssue($routeParams.id)
+                    .then(function (issueData) {
+                        projectFactory.getProject(issueData.Project.Id)
+                            .then(function (projectData) {
+                                identificationFactory.isLead(projectData.Lead.Id)
+                                    .then(function (isLead) {
+                                        $scope.isLead = isLead;
+                                });
+                        });
+                        identificationFactory.isAssignee(issueData.Assignee.Id)
+                            .then(function (isAssignee) {
+                                $scope.isAssignee = isAssignee;
+                        });
+                        $scope.issue = issueData;
+
+                        issueFactory.getIssueComments($routeParams.id)
+                            .then(function (comments) {
+                                $scope.issue.Comments = comments;
+                        });
+                });
+                $scope.addComment = addComment;
+                $scope.changeIssueStatus = changeIssueStatus;
             }
 
+            function addIssue(issue){
+                issue.ProjectId = $routeParams.id;
+                issueFactory.addIssue(issue)
+                    .then(function (success) {
+                        $location.path('/issues' + success.data.Id);
+                        popService.pop(success.status, 'Issue added successfully');
+                    }, function (error) {
+                        var message = popService.getErrorMessage(error);
+                        popService.pop(error.status, message);
+                });
+            }
+            function editIssue(issue){
+                issueFactory.editIssue(issue)
+                    .then(function (success) {
+                        $location.path('/issues/'+success.data.Id);
+                        popService.pop(success.status, 'Issue edited successfully');
+                    }, function (error) {
+                        var message = popService.getErrorMessage(error);
+                        popService.pop(error.status, message);
+                    });
+            }
+            function addComment(comment){
+                issueFactory.addComment($routeParams.id, comment)
+                    .then(function (response) {
+                        $scope.issue.Comments = response.data;
+                        popService.pop(response.status, 'Comment added successfully');
+                    }, function (error) {
+                        var message = popService.getErrorMessage(error);
+                        popService.pop(error.status, message);
+                    })
+            }
             function attachProjectPriorities(id) {
                 var project = $scope.projects.filter(function (project) {
                     return project.Id == id;
@@ -176,6 +142,15 @@ angular.module('IssueTrackingSystem.Issue', [])
                         var message = popService.getErrorMessage(error);
                         popService.pop(error.status, message);
                     })
+            }
+            function setIssueKey(){
+                $scope.setIssueKey = function () {
+                    if($scope.issue.Title){
+                        $scope.issue.IssueKey = $scope.issue.Title.match(/\b(\w)/g).join('');
+                    }else{
+                        $scope.issue.IssueKey = '';
+                    }
+                }
             }
     }])
 

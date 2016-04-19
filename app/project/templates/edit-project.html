@@ -1,8 +1,8 @@
 <div nav-menu></div>
-<div class="col-md-12">
+<div class="col-md-12" >
 <h2 style="margin-top: 0"> Edit Project</h2>
 <div>
-  <form name="edit-project-form" style="width:48%" class="pull-left">
+  <form name="edit-project-form" style="width:48%">
   <div class="form-group">
       <label for="projectName">Name</label>
       <input type="text" ng-model="project.Name" class="form-control" id="projectName" placeholder="Project Name" value="SIT">
@@ -31,42 +31,9 @@
       <textarea id="projectDescription" ng-model="project.Description"class="form-control" placeholder="Description">Project for managing issues for specific projects with priorities, status transitions and labels</textarea>
     </div>
     <button type="submit" class="btn btn-success" ng-disabled="!project.Name
-                    ||!project.Lead.Id
-                    ||!project.Description
-                    ||edit-project-form.$invalid"
-            ng-click="editProject(project)">Edit Project</button>
-  </form>
-  <form style="width:48%" class="pull-right">
-  <h3>Status transition scheme</h3>
-    <ul id="statuses">
-      <li>Open <button class="btn btn-sm btn-info">add element</button> <button class="btn btn-sm btn-info">add child element</button></li>
-      <li>
-      In Progress <button class="btn btn-sm btn-info">add element</button> <button class="btn btn-sm btn-info">add child element</button>
-        <ul>
-          <li>
-            Closed <button class="btn btn-sm btn-info">add element</button> <button class="btn btn-sm btn-info">add child element</button>
-          </li>
-        </ul>
-      </li>
-      <li>
-      Resolved <button class="btn btn-sm btn-info">add element</button> <button class="btn btn-sm btn-info">add child element</button>
-        <ul>
-          <li>
-            Closed <button class="btn btn-sm btn-info">add element</button> <button class="btn btn-sm btn-info">add child element</button>
-          </li>
-        </ul>
-        <ul>
-              <li>
-          Reopened <button class="btn btn-sm btn-info">add element</button> <button class="btn btn-sm btn-info">add child element</button>
-          <ul>
-              <li>
-                Closed <button class="btn btn-sm btn-info">add element</button> <button class="btn btn-sm btn-info">add child element</button>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </li>
-    </ul>
+                                                        ||!project.Lead.Id
+                                                        ||!project.Description
+                                                        ||edit-project-form.$invalid" ng-click="editProject(project)">Edit Project</button>
   </form>
   </div>
   </div>

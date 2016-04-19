@@ -1,16 +1,20 @@
 <div nav-menu></div>
-<div class=jumbotron>
+<div class="col-md-12" >
     <h2 style="margin-top: 0"> Add new Project</h2>
     <form name="add-project-form">
         <div class="form-group">
             <label for="projectName">Name</label>
-            <input type="text" class="form-control" id="projectName" placeholder="Project Name" ng-model="project.Name">
+            <input ng-change="setProjectKey()" type="text" class="form-control" id="projectName" placeholder="Project Name" ng-model="project.Name">
         </div>
         <div class="form-group">
             <label for="projectLeader">Leader</label>
             <select ng-model="project.LeadId" id="projectLeader" class="form-control">
                 <option  value="{{user.Id}}" ng-repeat="user in users">{{user.Username}}</option>
             </select>
+        </div>
+        <div class="form-group">
+            <label for="projectKey">Project Key</label>
+            <input id="projectKey" ng-model="project.ProjectKey" type="text" class="form-control" id="exampleInputEmail1" placeholder="Project Key" ng-disabled="true" value="123qwe">
         </div>
         <div class="form-group">
             <label for="projectPriorities">Priorities (comma separated)</label>
@@ -26,9 +30,8 @@
             <textarea id="projectDescription" ng-model="project.Description" class="form-control" placeholder="Description"></textarea>
         </div>
         <button type="submit" class="btn btn-success" ng-disabled="!project.Name
-                        ||!project.Description
-                        ||!project.LeadId
-                        ||add-project-form.$invalid"
-                ng-click="addProject(project)">Add Project</button>
+                                                            ||!project.Description
+                                                            ||!project.LeadId
+                                                            ||add-project-form.$invalid" ng-click="addProject(project)">Add Project</button>
     </form>
 </div>

@@ -4,13 +4,14 @@
             <a class="navbar-brand" href="#/">Dashboard</a>
         </div>
         <div ng-if="userLogged" id="navbar-main" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
+            <ul ng-if="isAdmin" class="nav navbar-nav">
                 <li><a href="#/projects">Projects</a></li>
-                <li ng-if="isAdmin"><a href="#/users">Users</a></li>
-                <li ng-if="isAdmin"><a href="http://softuni-issue-tracker.azurewebsites.net/help">Help</a></li>
-                <li ng-if="isAdmin"><a href="https://bootswatch.com/cosmo/">Bootstrap</a></li>
+                <li><a href="#/users">Users</a></li>
+                <li><a href="http://softuni-issue-tracker.azurewebsites.net/help">Help</a></li>
+                <li><a href="https://bootswatch.com/cosmo/">Bootstrap</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
+                <li><a style="cursor: default;"> {{user.Username}} </a></li>
                 <li><a href="#/profile/password">Change password</a></li>
                 <!--<li><a href="#/profile">Profile</a></li>-->
                 <li><a href="#/" ng-click="logout()">Log Out</a></li>

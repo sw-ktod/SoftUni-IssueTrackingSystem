@@ -10,7 +10,6 @@
                         if (bearerToken) {
                             config.headers['Authorization'] = 'Bearer ' + bearerToken;
                         }
-
                         return config || $q.when(config);
                     }
                 };
@@ -53,23 +52,57 @@
                     return JSON.parse(user).isAdmin;
                 }
                 function requireAdmin(){
+                    requireAuthorization();
                     if(!isAdmin()){
                         $location.path('/');
                         popService.pop(401, "Admin privileges required to access this page");
                         return;
                     }
                 }
+                function isLead(leadId){
+                    //var isLead = projectFactory.getProject(projectId)
+                    //    .then(function (response) {
+                    //        var leadId = response.data.Lead.Id;
+                    //        return getOwnId()
+                    //            .then(function (ownId) {
+                    //            return ownId === leadId;
+                    //        });
+                    //});
+                    //return $q.when(isLead);
+
+                    return getOwnId()
+                        .then(function (ownId) {
+                            return ownId === leadId;
+                     });
+                };
+                function requireLead(leadId){
+                    requireAuthorization();
+                    if(!isAdmin()){
+                        isLead(leadId)
+                            .then(function (isLead) {
+                                if(!isLead){
+                                    $location.path('/');
+                                    popService.pop(401, "Leader privileges required to access this page");
+                                }
+                        });
+                    }
+                };
+                function isAssignee(assigneeId){
+                    return getOwnId()
+                        .then(function (ownId) {
+                            return ownId === assigneeId;
+                    });
+                };
                 function getSelf(){
                     var deferred = $q.defer();
                     $http.get(BASE_URL + 'users/me')
                         .then(function (response) {
-                            deferred.resolve(response);
+                            deferred.resolve(response.data);
                         }, function (error) {
                             deferred.reject(error);
                         });
                     return deferred.promise;
-                }
-
+                };
                 function getOwnId(){
                     var deferred = $q.defer();
                     if(!existingCookie()){
@@ -82,7 +115,7 @@
                         deferred.reject();
                     }
                     return deferred.promise;
-                }
+                };
 
                 return {
                     setCookie: setCookie,
@@ -92,7 +125,10 @@
                     getOwnId: getOwnId,
                     requireAdmin: requireAdmin,
                     getUser: getSelf,
-                    isAdmin: isAdmin
-                }
-            }])
+                    isAdmin: isAdmin,
+                    isLead: isLead,
+                    requireLead: requireLead,
+                    isAssignee: isAssignee
+                };
+        }])
 })();

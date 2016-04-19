@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('IssueTrackingSystem.User.Factory', [])
+    angular.module('IssueTrackingSystem.User')
         .factory('userFactory', ['$q',
             '$http',
             'BASE_URL',

@@ -1,7 +1,7 @@
 <div nav-menu></div>
 <div>
     <h2 style="margin-top: 0"> Edit Issue</h2>
-    <fieldset class="col-md-6">
+    <form name="issue-edit-form" class="col-md-6">
             <div class="form-group">
                 <label for="issueTitle">Title</label>
                 <input type="text" class="form-control" id="issueTitle" ng-model="issue.Title" placeholder="Issue Title">
@@ -14,7 +14,7 @@
             </div>
             <div class="form-group">
                 <label for="issueProject">Project</label>
-                <select ng-disabled="!isAdmin" id="issueProject" ng-model="issue.Project.Id" class="form-control" ng-options="project.Id as project.Name for project in projects">
+                <select ng-disabled="true" id="issueProject" ng-model="issue.Project.Id" class="form-control" ng-options="project.Id as project.Name for project in projects">
                 </select>
             </div>
             <div class="form-group">
@@ -35,8 +35,13 @@
                 <input type="text" class="form-control" ng-model="issue.Labels" id="exampleInputPassword1" placeholder="Labels">
                 <br>
             </div>
-            <button type="submit" class="btn btn-success" ng-click="editIssue(issue)">Edit Issue</button>
-    </fieldset>
+            <button type="submit" class="btn btn-success" ng-disabled="!issue.Title
+                                                                || !issue.Assignee.Id
+                                                                || !issue.Priority.Id
+                                                                || !issue.DueDate
+                                                                || !issue.Description
+                                                                || edit-issue-form.$invalid" ng-click="editIssue(issue)">Edit Issue</button>
+    </form>
 
     <div class="item col-md-6 panel">
         <h3>Available statuses:</h3>
