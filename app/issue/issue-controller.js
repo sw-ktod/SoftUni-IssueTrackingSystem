@@ -39,6 +39,7 @@ angular.module('IssueTrackingSystem.Issue', [])
                     .then(function (users) {
                         $scope.users=users;
                 });
+
                 $scope.addIssue = addIssue;
                 $scope.setIssueKey = setIssueKey;
             }
@@ -86,12 +87,12 @@ angular.module('IssueTrackingSystem.Issue', [])
                                 $scope.isAssignee = isAssignee;
                         });
                         $scope.issue = issueData;
-
                         issueFactory.getIssueComments($routeParams.id)
                             .then(function (comments) {
                                 $scope.issue.Comments = comments;
                         });
                 });
+
                 $scope.addComment = addComment;
                 $scope.changeIssueStatus = changeIssueStatus;
             }
@@ -117,6 +118,7 @@ angular.module('IssueTrackingSystem.Issue', [])
                         popService.pop(error.status, message);
                     });
             }
+
             function addComment(comment){
                 issueFactory.addComment($routeParams.id, comment)
                     .then(function (response) {
@@ -136,8 +138,8 @@ angular.module('IssueTrackingSystem.Issue', [])
             function changeIssueStatus(issueId, statusId) {
                 issueFactory.changeIssueStatus(issueId, statusId)
                     .then(function (response) {
-                        popService.pop(response.status, 'Successfully applied issue status');
-                        $route.reload();
+                        $scope.issue.AvailableStatuses = response;
+                        popService.pop(200, 'Successfully applied issue status');
                     }, function (error) {
                         var message = popService.getErrorMessage(error);
                         popService.pop(error.status, message);
@@ -153,5 +155,4 @@ angular.module('IssueTrackingSystem.Issue', [])
                 }
             }
     }])
-
 })();

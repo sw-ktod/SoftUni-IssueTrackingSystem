@@ -21,6 +21,16 @@
     </div>
     <div class="item col-md-7">
 
+        <label for="issue-filter"></label>
+        <select id="issue-filter" ng-model="issueFilter">
+            <option ng-click="filterIssues(issueFilter)" value="All">All</option>
+            <option ng-click="filterIssues(issueFilter)" ng-selected="true" value="Assigned">Assigned</option>
+            <option ng-click="filterIssues(issueFilter)" value="Author">Author</option>
+            <option ng-click="filterIssues(issueFilter)" value="Open">Open</option>
+            <option ng-click="filterIssues(issueFilter)" value="InProgress">In progress</option>
+            <option ng-click="filterIssues(issueFilter)" value="StoppedProgress">Stopped progress</option>
+        </select>
+        <span ng-if="issueCount>0">{{issueCount}} issues </span>
         <table class="table table-hover ">
             <thead>
             <tr>
@@ -31,7 +41,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr style="border-top: solid 1px grey" ng-repeat="issue in project.issues">
+            <tr style="border-top: solid 1px grey" ng-repeat="issue in project.Issues">
                 <td>
                     <a style="text-decoration:none" href="#/issues/{{issue.Id}}">{{issue.Title}} </a>
                 </td>

@@ -60,21 +60,12 @@
                                 .then(function (isLead) {
                                     $scope.isLead = isLead;
                             });
+                            filterIssues('Assigned');
+                            $scope.filterIssues = filterIssues;
                     });
-                    issueFactory.getIssuesByProject($routeParams.id)
-                        .then(function (projectIssues) {
-                            if($scope.isLead || $scope.isAdmin){
-                                $scope.project.issues = projectIssues;
-                                return;
-                            }
-                            identificationFactory.getOwnId()
-                                .then(function (id) {
-                                    $scope.project.issues = projectIssues.filter(function (issue) {
-                                        return issue.Assignee.Id === id;
-                                    });
-                                });
-                        });
+
                 }
+
                 /**
                  *  Adding project
                  */
@@ -127,6 +118,50 @@
                         $scope.project.ProjectKey = '';
                     }
                 }
+                function filterIssues(filter){
+
+                    issueFactory.getIssuesByProject($routeParams.id)
+                        .then(function (projectIssues) {
+                            identificationFactory.getOwnId()
+                                .then(function (id) {
+                                    switch(filter){
+                                        case 'All':
+                                            $scope.project.Issues = projectIssues;
+                                            break;
+                                        case 'Assigned':
+                                            $scope.project.Issues = projectIssues.filter(function (issue) {
+                                                return issue.Assignee.Id === id;
+                                            });
+                                            break;
+                                        case 'Author':
+                                            $scope.project.Issues = projectIssues.filter(function (issue) {
+                                                return issue.Author.Id === id;
+                                            });
+                                            break;
+                                        case 'Open':
+                                            $scope.project.Issues = projectIssues.filter(function (issue) {
+                                                return issue.Status.Name !== 'Closed';
+                                            });
+                                            break;
+                                        case 'InProgress':
+                                            $scope.project.Issues = projectIssues.filter(function (issue) {
+                                                return issue.Status.Name === 'InProgress';
+                                            });
+                                            break;
+                                        case 'StoppedProgress':
+                                            $scope.project.Issues = projectIssues.filter(function (issue) {
+                                                return issue.Status.Name === 'StoppedProgress';
+                                            });
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                    $scope.issueCount = $scope.project.Issues.length;
+                                });
+                        });
+                }
             }
-        ])
+        ]).filter('AssignedIssues', ['$scope',function ($scope) {
+                $scope.project.Issues = projectIssues;
+        }])
 })();

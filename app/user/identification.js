@@ -26,31 +26,31 @@
             function ($window, $location, popService, $http, $q, BASE_URL) {
                 function setCookie(key, value){
                     $window.sessionStorage[key] = value;
-                }
+                };
                 function getCookieData(key){
                     return $window.sessionStorage[key];
-                }
+                };
                 function existingCookie(){
                     return $window.sessionStorage.access_token ? 1 : 0;
-                }
+                };
                 function removeCookie(){
                     $window.sessionStorage.removeItem('access_token');
                     $window.sessionStorage.removeItem('user');
-                }
+                };
                 function requireAuthorization(){
                     if(!existingCookie()){
                         $location.path('/');
                         popService.pop(401, "You have to login first");
                         return;
                     }
-                }
+                };
                 function isAdmin(){
                     if(!existingCookie()){
                         return false;
                     }
                     var user = getCookieData('user');
                     return JSON.parse(user).isAdmin;
-                }
+                };
                 function requireAdmin(){
                     requireAuthorization();
                     if(!isAdmin()){
@@ -58,18 +58,8 @@
                         popService.pop(401, "Admin privileges required to access this page");
                         return;
                     }
-                }
+                };
                 function isLead(leadId){
-                    //var isLead = projectFactory.getProject(projectId)
-                    //    .then(function (response) {
-                    //        var leadId = response.data.Lead.Id;
-                    //        return getOwnId()
-                    //            .then(function (ownId) {
-                    //            return ownId === leadId;
-                    //        });
-                    //});
-                    //return $q.when(isLead);
-
                     return getOwnId()
                         .then(function (ownId) {
                             return ownId === leadId;
