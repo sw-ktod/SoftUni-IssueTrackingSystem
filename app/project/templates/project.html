@@ -23,12 +23,12 @@
         <!--filter=Priority.Name == \"In Progress\" or DueDate.Day == 21-->
         <label for="issue-filter"></label>
         <select ng-change="filterIssues(pageSize, page, issueFilter)" id="issue-filter" ng-model="issueFilter">
-            <option value='Project.Id == {{project.Id}}'>All</option>
-            <option ng-selected="true" value='Assignee.Id == "{{user.Id}}" and Project.Id == {{project.Id}}'>Assigned</option>
-            <option value='Author.Id == "{{user.Id}}" and Project.Id == {{project.Id}}'>Author</option>
-            <option value='Status.Name != "Closed" and Project.Id == {{project.Id}}'>Open</option>
-            <option value='Status.Name == "InProgress" and Project.Id == {{project.Id}}'>In progress</option>
-            <option value='Status.Name == "StoppedProgress" and Project.Id == {{project.Id}}'>Stopped progress</option>
+            <option value='all'>All</option>
+            <option value='assigned' ng-selected="true">Assigned</option>
+            <option value='author'>Author</option>
+            <option value='open'>Open</option>
+            <option value='inProgress'>In progress</option>
+            <option value='stoppedProgress'>Stopped progress</option>
         </select>
         <select ng-change="filterIssues(pageSize, page, issueFilter)" ng-model="pageSize" id="pageSize">
             <option ng-selected="true" value="3">3</option>
@@ -51,7 +51,7 @@
                     <a style="text-decoration:none" href="#/issues/{{issue.Id}}">{{issue.Title}} </a>
                 </td>
                 <td>{{issue.Description}} </td>
-                <td>{{issue.DueDate}} </td>
+                <td>{{issue.DueDate | date:'MM/dd/yyyy-hh:mm'}} </td>
                 <td>{{issue.Assignee.Username}} </td>
             </tr>
             </tbody>

@@ -62,6 +62,7 @@
                             });
                             filterIssues();
                             $scope.filterIssues = filterIssues;
+                            $scope.dateToday = new Date();
                     });
 
                 }
@@ -119,12 +120,35 @@
                     }
                 }
                 function filterIssues(pageSize, page, filter){
+
+
                     identificationFactory.getOwnId()
                         .then(function (id) {
+                            switch(filter){
+                                case 'all':
+                                    filter = 'Project.Id == ' + $scope.project.Id;
+                                    break;
+                                case 'assigned':
+                                    filter = 'Assignee.Id == "' + id + '" and Project.Id == ' + $scope.project.Id;
+                                    break;
+                                case 'all':
+                                    filter = 'Author.Id == "' + id + '" and Project.Id == ' + $scope.project.Id;
+                                    break;
+                                case 'open':
+                                    filter = 'Status.Name != "Closed" and Project.Id == ' + $scope.project.Id;
+                                    break;
+                                case 'inProgress':
+                                    filter = 'Status.Name == "InProgress" and Project.Id == ' + $scope.project.Id;
+                                    break;
+                                case 'stoppedProgress':
+                                    filter = 'Status.Name == "StoppedProgress" and Project.Id == ' + $scope.project.Id;
+                                    break;
+                                default:
+                                    filter = 'Assignee.Id == "' + id + '" and Project.Id == ' + $scope.project.Id;
+                                    break;
+                            }
                             pageSize = pageSize || 3;
                             page = page || 1;
-                            filter = filter || 'Assignee.Id == "'+ id + '" and Project.Id == ' + $routeParams.id;
-
                             issueFactory.getIssuesByFilter(pageSize, page, filter)
                                 .then(function (response) {
                                     $scope.project.Issues = response.Issues;
@@ -132,7 +156,22 @@
                                     $scope.issuePages = response.TotalPages;
                             });
                     });
+
+
                 }
+                //function filterProjects(pageSize, page, filter){
+                //    identificationFactory.getOwnId()
+                //        .then(function (id) {
+                //        pageSize = pageSize || 3;
+                //        page = page || 1;
+                //        filter = filter || 'Assignee.Id == "'+ id + '" and Lead.Id == ' + $routeParams.id;
+                //        issueFactory.getProjectsByFilter(pageSize, page, filter)
+                //            .then(function (response) {
+                //                $scope.projects = respose.Projects;
+                //                $scope.projectPages = respose.TotalCount;
+                //            });
+                //    });
+                //}
             }
         ])
 })();

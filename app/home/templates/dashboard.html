@@ -5,7 +5,10 @@
     <h1>Dashboard</h1>
     <div class="col-md-4">
         <h2>Affiliated projects</h2>
-        <a href="#/projects/{{project.Id}}" class="row" ng-repeat="project in projects">{{project.Name}}</a>
+
+        <div class="col-md-4">
+            <a href="#/projects/{{project.Id}}" class="row" ng-repeat="project in projects">{{project.Name}}</a>
+        </div>
     </div>
     <div class="col-md-8">
         <label for="pageSize">Issues per page</label>
@@ -35,7 +38,7 @@
                 <td><a href="#/issues/{{issue.Id}}">{{issue.Title}}</a></td>
                 <td>{{issue.Description}}</td>
                 <td><a href="#/projects/{{issue.Project.Id}}">{{issue.Project.Name}}</a></td>
-                <td>{{issue.DueDate}}</td>
+                <td>{{issue.DueDate | date:'MM/dd/yyyy-hh:mm'}}</td>
             </tr>
             </tbody>
         </table>

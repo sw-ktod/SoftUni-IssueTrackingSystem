@@ -5,12 +5,26 @@
             '$q',
             'BASE_URL',
             function projectFactory($http, $q, BASE_URL) {
+
+
                 function getProjects() {
                     var deferred = $q.defer();
                     $http.get(BASE_URL + 'projects')
                         .then(function (response) {
                             deferred.resolve(response.data);
                         }, function (error){
+                            deferred.reject(error);
+                        });
+                    return deferred.promise;
+                }
+                function getProjectsByFilter(pageSize, page, filter){
+                    var deferred = $q.defer();
+                    $http.get(BASE_URL + 'projects/?pageSize=' + pageSize
+                        + '&pageNumber=' + page
+                        + '&filter=' + filter)
+                        .then(function (response) {
+                            deferred.resolve(response.data);
+                        }, function (error) {
                             deferred.reject(error);
                         });
                     return deferred.promise;
@@ -108,6 +122,7 @@
 
                 return {
                     getProjects: getProjects,
+                    getProjectsByFilter: getProjectsByFilter,
                     getProject: getProject,
                     getUserProjects: getUserRelatedProjects,
                     addProject: addProject,

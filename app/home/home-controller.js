@@ -32,6 +32,7 @@
                         $scope.addIssueRedirect = function () {
                             $location.path('issues/add');
                         };
+                        $scope.dateToday = new Date();
                     }
                     /**
                      * Guest user

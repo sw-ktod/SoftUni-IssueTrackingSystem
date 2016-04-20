@@ -33,7 +33,6 @@ angular.module('IssueTrackingSystem.Issue', [])
                     .then(function (project) {
                         identificationFactory.requireLead(project.Lead.Id);
                         $scope.project = project;
-                        console.log($scope.project.Priorities);
                 });
                 userFactory.getUsers()
                     .then(function (users) {

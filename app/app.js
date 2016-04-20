@@ -11,6 +11,7 @@
         'IssueTrackingSystem.Project',
         'IssueTrackingSystem.Issue',
         'IssueTrackingSystem.Popper',
+        'angular-loading-bar',
     ]).config(['$routeProvider',
         function ($routeProvider) {
             $routeProvider.otherwise({redirectTo: "/"});

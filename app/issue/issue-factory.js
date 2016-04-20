@@ -133,6 +133,9 @@
             };
             function manageLabels(issue){
                 var labels = [];
+                if(!issue.Labels){
+                    return issue;
+                }
                 issue.Labels.split(', ').forEach(function (label, key) {
                     if(label !== ''){
                         labels.push({
