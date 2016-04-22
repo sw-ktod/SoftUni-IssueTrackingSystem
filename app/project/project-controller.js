@@ -137,6 +137,9 @@
                                 case 'open':
                                     filter = 'Status.Name != "Closed" and Project.Id == ' + $scope.project.Id;
                                     break;
+                                case 'closed':
+                                    filter = 'Status.Name == "Closed" and Project.Id == ' + $scope.project.Id;
+                                    break;
                                 case 'inProgress':
                                     filter = 'Status.Name == "InProgress" and Project.Id == ' + $scope.project.Id;
                                     break;

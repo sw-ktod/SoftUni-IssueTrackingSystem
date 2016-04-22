@@ -49,11 +49,12 @@
                     });
                 return deferred.promise;
             };
-            function userIssues(pageSize, pageNumber ,orderBy){
+            function userIssues(pageSize, pageNumber ,orderBy, status){
                 var deferred = $q.defer();
                 $http.get(BASE_URL + 'issues/me?pageSize='+ pageSize
                         + '&pageNumber=' + pageNumber
-                        + '&orderBy=' + orderBy)
+                        + '&orderBy=' + orderBy
+                        + (!status ? '' : ('&filter=Status.Name=' + status)))
                     .then(function (response) {
                         deferred.resolve(response.data);
                     }, function (error) {

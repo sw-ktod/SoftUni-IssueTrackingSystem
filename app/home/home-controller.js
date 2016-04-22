@@ -73,19 +73,19 @@
                     }
                 }
 
-                function attachUserRelatedIssues(pageSize, pageNumber, orderBy){
+                function attachUserRelatedIssues(pageSize, pageNumber, orderBy, status){
                     pageSize = pageSize || 3;
                     pageNumber = pageNumber || 1;
                     orderBy = orderBy || 'DueDate desc';
-
-                    issueFactory.getUserIssues(pageSize, pageNumber, orderBy)
+                    console.log(status);
+                    issueFactory.getUserIssues(pageSize, pageNumber, orderBy, status)
                         .then(function (data) {
                             $scope.issuePages = data.TotalPages;
                             $scope.issues = data.Issues;
                     });
                 };
                 function attachUserRelatedProjects(){
-                    issueFactory.getUserIssues(999999, 1)
+                    issueFactory.getUserIssues(999999, 1 ,'DueDate desc')
                         .then(function (data) {
                             var projects = [];
                             data.Issues.forEach(function (issue) {

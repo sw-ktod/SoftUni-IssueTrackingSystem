@@ -29,11 +29,14 @@
             <option value='open'>Open</option>
             <option value='inProgress'>In progress</option>
             <option value='stoppedProgress'>Stopped progress</option>
+            <option value='closed'>Closed</option>
         </select>
-        <label for="issue-priority-filter"></label>
+        <label for="issue-priority-filter">Priority filter</label>
         <select ng-change="filterIssues(pageSize, page, issueFilter, issuePriorityFilter)" id="issue-priority-filter" ng-model="issuePriorityFilter">
+            <option ng-selected="true" value="">Any</option>
             <option ng-repeat="priority in project.priorityObjects" value='{{priority.Name}}'>{{priority.Name}}</option>
         </select>
+        <label for="pageSize">Issues per page</label>
         <select ng-change="filterIssues(pageSize, page, issueFilter)" ng-model="pageSize" id="pageSize">
             <option ng-selected="true" value="3">3</option>
             <option value="5">5</option>
@@ -50,7 +53,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr style="border-top: solid 1px grey" ng-repeat="issue in project.Issues">
+            <tr ng-style="issue.Status.Name == 'Closed' ? {'background-color':'Silver'} : {}" class style="border-top: solid 1px grey" ng-repeat="issue in project.Issues">
                 <td>
                     <a style="text-decoration:none" href="#/issues/{{issue.Id}}">{{issue.Title}} </a>
                 </td>
@@ -59,7 +62,7 @@
                 ? {'background-color':'firebrick'}
                 : dateDiff(issue.DueDate) <= 10
                     ? {'background-color':'DarkOrange'}
-                    : {'background-color': 'Grey'}">{{issue.DueDate | date:'MM/dd/yyyy-hh:mm'}} </td>
+                    : {}">{{issue.DueDate | date:'MM/dd/yyyy-hh:mm'}} </td>
                 <td>{{issue.Assignee.Username}} </td>
             </tr>
             </tbody>
