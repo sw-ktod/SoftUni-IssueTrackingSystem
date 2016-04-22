@@ -121,7 +121,7 @@
                         $scope.project.ProjectKey = '';
                     }
                 }
-                function filterIssues(pageSize, page, filter){
+                function filterIssues(pageSize, page, filter, priority){
                     identificationFactory.getOwnId()
                         .then(function (id) {
                             switch(filter){
@@ -143,17 +143,12 @@
                                 case 'stoppedProgress':
                                     filter = 'Status.Name == "StoppedProgress" and Project.Id == ' + $scope.project.Id;
                                     break;
-                                case 'overdue':
-                                    var now = new Date();
-                                    console.log(now.getMonth());
-                                    filter = 'DueDate.Day <= ' + now.getDate()
-                                        + ' and DueDate.Month <=' + now.getMonth()+1
-                                        + ' and DueDate.Year <=' + now.getFullYear()
-                                        + ' and Project.Id == ' + $scope.project.Id;
-                                    break;
                                 default:
                                     filter = 'Assignee.Id == "' + id + '" and Project.Id == ' + $scope.project.Id;
                                     break;
+                            }
+                            if(priority){
+                                filter += 'and Priority.Name =="' + priority +'"';
                             }
                             pageSize = pageSize || 3;
                             page = page || 1;
