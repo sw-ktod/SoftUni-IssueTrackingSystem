@@ -55,14 +55,15 @@
                     identificationFactory.requireAuthorization();
                     projectFactory.getProject($routeParams.id)
                         .then(function (project) {
+                            var priorityObjects = project.Priorities;
                             $scope.project = projectFactory.translatePrioritiesAndLabels(project);
+                            $scope.project.priorityObjects = priorityObjects;
                             identificationFactory.isLead(project.Lead.Id)
                                 .then(function (isLead) {
                                     $scope.isLead = isLead;
                             });
                             filterIssues();
                             $scope.filterIssues = filterIssues;
-                            $scope.dateToday = new Date();
                     });
 
                 }
@@ -100,6 +101,7 @@
                             popService.pop(response.status, message);
                     });
                 }
+
                 function editProject(project){
                     project.LeadId = project.Lead.Id;
                     delete project.Lead;
@@ -120,8 +122,6 @@
                     }
                 }
                 function filterIssues(pageSize, page, filter){
-
-
                     identificationFactory.getOwnId()
                         .then(function (id) {
                             switch(filter){
@@ -143,6 +143,14 @@
                                 case 'stoppedProgress':
                                     filter = 'Status.Name == "StoppedProgress" and Project.Id == ' + $scope.project.Id;
                                     break;
+                                case 'overdue':
+                                    var now = new Date();
+                                    console.log(now.getMonth());
+                                    filter = 'DueDate.Day <= ' + now.getDate()
+                                        + ' and DueDate.Month <=' + now.getMonth()+1
+                                        + ' and DueDate.Year <=' + now.getFullYear()
+                                        + ' and Project.Id == ' + $scope.project.Id;
+                                    break;
                                 default:
                                     filter = 'Assignee.Id == "' + id + '" and Project.Id == ' + $scope.project.Id;
                                     break;
@@ -156,22 +164,7 @@
                                     $scope.issuePages = response.TotalPages;
                             });
                     });
-
-
                 }
-                //function filterProjects(pageSize, page, filter){
-                //    identificationFactory.getOwnId()
-                //        .then(function (id) {
-                //        pageSize = pageSize || 3;
-                //        page = page || 1;
-                //        filter = filter || 'Assignee.Id == "'+ id + '" and Lead.Id == ' + $routeParams.id;
-                //        issueFactory.getProjectsByFilter(pageSize, page, filter)
-                //            .then(function (response) {
-                //                $scope.projects = respose.Projects;
-                //                $scope.projectPages = respose.TotalCount;
-                //            });
-                //    });
-                //}
             }
         ])
 })();

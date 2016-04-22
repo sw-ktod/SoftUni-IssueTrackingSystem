@@ -23,8 +23,9 @@
         .controller('userCtrl',['$scope',
             '$location',
             'userFactory',
+            'identificationFactory',
             'popService',
-            function userCtrl($scope, $location, userFactory, popService) {
+            function userCtrl($scope, $location, userFactory,identificationFactory, popService) {
                 /**
                  * Getting all users
                  */

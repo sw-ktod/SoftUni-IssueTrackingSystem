@@ -50,10 +50,6 @@
                 return deferred.promise;
             };
             function userIssues(pageSize, pageNumber ,orderBy){
-                pageSize = pageSize || 3;
-                pageNumber = pageNumber || 1;
-                orderBy = orderBy || 'DueDate desc';
-
                 var deferred = $q.defer();
                 $http.get(BASE_URL + 'issues/me?pageSize='+ pageSize
                         + '&pageNumber=' + pageNumber
@@ -118,6 +114,11 @@
                     });
                 return deferred.promise;
             };
+            /**
+             * turns issues labels into strings
+             * @param issue
+             * @returns issue object with stringified labels
+             */
             function translateLabels(issue){
                 var labels = '';
                 issue.Labels.forEach(function (label) {
@@ -131,6 +132,11 @@
 
                 return issue;
             };
+            /**
+             * splits issue labels input field
+             * @param issue
+             * @returns issue object with modified labels
+             */
             function manageLabels(issue){
                 var labels = [];
                 if(!issue.Labels){

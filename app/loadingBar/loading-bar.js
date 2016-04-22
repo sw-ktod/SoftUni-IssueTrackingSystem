@@ -160,7 +160,7 @@
     angular.module('cfp.loadingBar', [])
         .provider('cfpLoadingBar', function() {
 
-            this.autoIncrement = false;
+            this.autoIncrement = true;
             this.includeSpinner = false;
             this.includeBar = true;
             this.latencyThreshold = 100;

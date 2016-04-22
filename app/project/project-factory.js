@@ -78,6 +78,11 @@
                     return deferred.promise;
                 }
 
+                /**
+                 * takes the project object and modifies its labels and priorities to a presentable state
+                 * @param project
+                 * @returns project with stringified labels and priorities
+                 */
                 function translatePrioritiesAndLabels(project){
                     var labels = '';
                     project.Labels.forEach(function (label) {
@@ -100,6 +105,11 @@
                     return project;
                 }
 
+                /**
+                 * takes the project object and modifies its labels and priorities inputs
+                 * @param project
+                 * @returns project with modified(objectified) labels and priorities
+                 */
                 function managePrioritiesAndLabels(project){
                     var labels = [];
                     project.Labels.split(', ').forEach(function (label, key) {

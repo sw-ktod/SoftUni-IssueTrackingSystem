@@ -6,7 +6,7 @@
     <div class="col-md-4">
         <h2>Affiliated projects</h2>
 
-        <div class="col-md-4">
+        <div>
             <a href="#/projects/{{project.Id}}" class="row" ng-repeat="project in projects">{{project.Name}}</a>
         </div>
     </div>
@@ -24,7 +24,7 @@
             <option value="DueDate">Due Date &#x2191</option>
             <option ng-selected="true" value="DueDate desc">Due Date &#x2193</option>
         </select>
-        <table class="table table-striped">
+        <table class="table table-striped table-hover">
             <thead>
             <tr>
                 <th>Issue</th>
@@ -38,7 +38,11 @@
                 <td><a href="#/issues/{{issue.Id}}">{{issue.Title}}</a></td>
                 <td>{{issue.Description}}</td>
                 <td><a href="#/projects/{{issue.Project.Id}}">{{issue.Project.Name}}</a></td>
-                <td>{{issue.DueDate | date:'MM/dd/yyyy-hh:mm'}}</td>
+                <td ng-style="dateDiff(issue.DueDate) <= 0
+                ? {'background-color':'firebrick'}
+                : dateDiff(issue.DueDate) <= 10
+                    ? {'background-color':'DarkOrange'}
+                    : {'background-color': 'Grey'}">{{issue.DueDate | date:'MM/dd/yyyy-hh:mm'}} </td>
             </tr>
             </tbody>
         </table>

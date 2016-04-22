@@ -32,7 +32,6 @@
                         $scope.addIssueRedirect = function () {
                             $location.path('issues/add');
                         };
-                        $scope.dateToday = new Date();
                     }
                     /**
                      * Guest user
@@ -75,6 +74,10 @@
                 }
 
                 function attachUserRelatedIssues(pageSize, pageNumber, orderBy){
+                    pageSize = pageSize || 3;
+                    pageNumber = pageNumber || 1;
+                    orderBy = orderBy || 'DueDate desc';
+
                     issueFactory.getUserIssues(pageSize, pageNumber, orderBy)
                         .then(function (data) {
                             $scope.issuePages = data.TotalPages;
@@ -153,6 +156,17 @@
                                         .then(function (user) {
                                             scope.user = user;
                                     });
+                                    var now = new Date();
+
+                                    scope.dateToday = now.getFullYear() + '-' + now.getMonth()+1 + '-' + now.getDate()
+                                        +'T' + now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds();
+
+                                    scope.dateDiff = function(date, now) {
+                                        now = now || new Date();
+                                        date = new Date(date);
+                                        var diffDays =  parseInt((date.getTime()-now.getTime())/(24*3600*1000));
+                                        return diffDays ;
+                                    }
                                 }
                             }
                         }
