@@ -77,10 +77,19 @@
                         });
                     }
                 };
-                function isAssignee(assigneeId){
+                //function isIssueAssignee(assigneeId){
+                //    return getOwnId()
+                //        .then(function (ownId) {
+                //            return ownId === assigneeId;
+                //    });
+                //};
+                function isProjectAssignee(issues){
                     return getOwnId()
                         .then(function (ownId) {
-                            return ownId === assigneeId;
+                            var assignedIssues = issues.filter(function (issue) {
+                                return issue.Assignee.Id == ownId;
+                            });
+                            return ((typeof assignedIssues[0]) !== "undefined");
                     });
                 };
                 function getSelf(){
@@ -118,7 +127,7 @@
                     isAdmin: isAdmin,
                     isLead: isLead,
                     requireLead: requireLead,
-                    isAssignee: isAssignee
+                    isProjectAssignee: isProjectAssignee
                 };
         }])
 })();

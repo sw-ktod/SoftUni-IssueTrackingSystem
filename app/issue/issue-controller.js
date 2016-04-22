@@ -48,7 +48,7 @@ angular.module('IssueTrackingSystem.Issue', [])
             else if($location.path().match('\/(?!index\.html)(issues\/[0-9]+\/edit)')){
                 issueFactory.getIssue($routeParams.id)
                     .then(function (issue) {
-                        $scope.issue = issue;
+                        $scope.issue = issueFactory.translateLabels(issue);
                         projectFactory.getProjects()
                             .then(function (projects) {
                                 var current = projects.filter(function (project) {
@@ -81,10 +81,14 @@ angular.module('IssueTrackingSystem.Issue', [])
                                         $scope.isLead = isLead;
                                 });
                         });
-                        identificationFactory.isAssignee(issueData.Assignee.Id)
-                            .then(function (isAssignee) {
-                                $scope.isAssignee = isAssignee;
+                        issueFactory.getIssuesByProject(issueData.Project.Id)
+                            .then(function (issues) {
+                                identificationFactory.isProjectAssignee(issues)
+                                    .then(function (isAssignee) {
+                                        $scope.isAssignee = isAssignee;
+                                });
                         });
+
                         $scope.issue = issueFactory.translateLabels(issueData);
                         issueFactory.getIssueComments($routeParams.id)
                             .then(function (comments) {

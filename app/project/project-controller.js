@@ -40,7 +40,7 @@
                         .then(function (project) {
                             identificationFactory.requireLead(project.Lead.Id);
 
-                            $scope.project = project;
+                            $scope.project = projectFactory.translatePrioritiesAndLabels(project);
                             userFactory.getUsers()
                                 .then(function (users) {
                                     $scope.users=users;
